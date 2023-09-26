@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="edu.brown.cs.testing.TestingParseSearch" time="0.787" tests="17" errors="0" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="edu.brown.cs.testing.TestingParseSearch" time="0.842" tests="17" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Users\karav\.jdks\openjdk-17\jdk-17.0.8\bin"/>
-    <property name="sun.java.command" value="C:\Users\karav\AppData\Local\Temp\surefire16183056014964788898\surefirebooter-20230926112430403_3.jar C:\Users\karav\AppData\Local\Temp\surefire16183056014964788898 2023-09-26T11-24-29_797-jvmRun1 surefire-20230926112430403_1tmp surefire_0-20230926112430403_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\karav\AppData\Local\Temp\surefire17511361266359973234\surefirebooter-20230926113645578_3.jar C:\Users\karav\AppData\Local\Temp\surefire17511361266359973234 2023-09-26T11-36-44_961-jvmRun1 surefire-20230926113645578_1tmp surefire_0-20230926113645578_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\karav\OneDrive\Documents\CS32\server-bkaravan-jtao25\target\test-classes;C:\Users\karav\OneDrive\Documents\CS32\server-bkaravan-jtao25\target\classes;C:\Users\karav\.m2\repository\com\squareup\moshi\moshi\1.13.0\moshi-1.13.0.jar;C:\Users\karav\.m2\repository\com\squareup\okio\okio\2.10.0\okio-2.10.0.jar;C:\Users\karav\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.20\kotlin-stdlib-1.4.20.jar;C:\Users\karav\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\karav\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.20\kotlin-stdlib-common-1.4.20.jar;C:\Users\karav\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.6.0\kotlin-stdlib-jdk8-1.6.0.jar;C:\Users\karav\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.6.0\kotlin-stdlib-jdk7-1.6.0.jar;C:\Users\karav\.m2\repository\com\squareup\moshi\moshi-adapters\1.13.0\moshi-adapters-1.13.0.jar;C:\Users\karav\.m2\repository\com\sparkjava\spark-core\2.9.3\spark-core-2.9.3.jar;C:\Users\karav\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-server\9.4.31.v20200723\jetty-server-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\javax\servlet\javax.servlet-api\3.1.0\javax.servlet-api-3.1.0.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-http\9.4.31.v20200723\jetty-http-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-util\9.4.31.v20200723\jetty-util-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-io\9.4.31.v20200723\jetty-io-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-webapp\9.4.31.v20200723\jetty-webapp-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-xml\9.4.31.v20200723\jetty-xml-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-servlet\9.4.31.v20200723\jetty-servlet-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-security\9.4.31.v20200723\jetty-security-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\websocket\websocket-server\9.4.31.v20200723\websocket-server-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\websocket\websocket-common\9.4.31.v20200723\websocket-common-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\websocket\websocket-client\9.4.31.v20200723\websocket-client-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\jetty-client\9.4.31.v20200723\jetty-client-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\websocket\websocket-servlet\9.4.31.v20200723\websocket-servlet-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\eclipse\jetty\websocket\websocket-api\9.4.31.v20200723\websocket-api-9.4.31.v20200723.jar;C:\Users\karav\.m2\repository\org\testng\testng\7.8.0\testng-7.8.0.jar;C:\Users\karav\.m2\repository\com\beust\jcommander\1.82\jcommander-1.82.jar;C:\Users\karav\.m2\repository\org\webjars\jquery\3.6.1\jquery-3.6.1.jar;C:\Users\karav\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.4.0\junit-jupiter-engine-5.4.0.jar;C:\Users\karav\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\karav\.m2\repository\org\junit\platform\junit-platform-engine\1.4.0\junit-platform-engine-1.4.0.jar;C:\Users\karav\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\karav\.m2\repository\org\junit\platform\junit-platform-commons\1.4.0\junit-platform-commons-1.4.0.jar;C:\Users\karav\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.4.0\junit-jupiter-api-5.4.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\karav\AppData\Local\Temp\surefire16183056014964788898\surefirebooter-20230926112430403_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\karav\AppData\Local\Temp\surefire17511361266359973234\surefirebooter-20230926113645578_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.8+9-LTS-211"/>
@@ -56,80 +56,16 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="parseBigFile" classname="edu.brown.cs.testing.TestingParseSearch" time="0.1"/>
+  <testcase name="parseBigFile" classname="edu.brown.cs.testing.TestingParseSearch" time="0.105"/>
   <testcase name="searchFoundNoNarrowNoHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.003"/>
-  <testcase name="searchFoundNarrowHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
-  <testcase name="parseDifferentGeneric" classname="edu.brown.cs.testing.TestingParseSearch" time="0.022"/>
-  <testcase name="parseCheckDataset" classname="edu.brown.cs.testing.TestingParseSearch" time="0.008"/>
-  <testcase name="searchNotFoundWrongNarrow" classname="edu.brown.cs.testing.TestingParseSearch" time="0.012">
-    <failure message="expected:&lt;1&gt; but was:&lt;0&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: expected:<1> but was:<0>
-	at org.testng.AssertJUnit.fail(AssertJUnit.java:65)
-	at org.testng.AssertJUnit.failNotEquals(AssertJUnit.java:467)
-	at org.testng.AssertJUnit.assertEquals(AssertJUnit.java:88)
-	at org.testng.AssertJUnit.assertEquals(AssertJUnit.java:318)
-	at org.testng.AssertJUnit.assertEquals(AssertJUnit.java:328)
-	at edu.brown.cs.testing.TestingParseSearch.searchNotFoundWrongNarrow(TestingParseSearch.java:258)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:628)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:117)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:184)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:180)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:127)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:135)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:229)
-	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:197)
-	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:211)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:191)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:55)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:223)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:175)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:139)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:456)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:169)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:595)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:581)
-]]></failure>
-  </testcase>
+  <testcase name="searchFoundNarrowHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.002"/>
+  <testcase name="parseDifferentGeneric" classname="edu.brown.cs.testing.TestingParseSearch" time="0.025"/>
+  <testcase name="parseCheckDataset" classname="edu.brown.cs.testing.TestingParseSearch" time="0.01"/>
+  <testcase name="searchNotFoundWrongNarrow" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
   <testcase name="searchFoundNarrowNoHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
-  <testcase name="searchWithMistake" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
-  <testcase name="testDoubleQuotesCommas" classname="edu.brown.cs.testing.TestingParseSearch" time="0.013"/>
-  <testcase name="parseFileReaderWithFactoryFailure" classname="edu.brown.cs.testing.TestingParseSearch" time="0.01">
+  <testcase name="searchWithMistake" classname="edu.brown.cs.testing.TestingParseSearch" time="0.002"/>
+  <testcase name="testDoubleQuotesCommas" classname="edu.brown.cs.testing.TestingParseSearch" time="0.018"/>
+  <testcase name="parseFileReaderWithFactoryFailure" classname="edu.brown.cs.testing.TestingParseSearch" time="0.011">
     <system-out><![CDATA[Row with index 2 was not processed. Error: edu.brown.cs.student.main.rowhandler.FactoryFailureException: Your row contains an empty entry
 Row with index 3 was not processed. Error: edu.brown.cs.student.main.rowhandler.FactoryFailureException: Your row contains an empty entry
 Row with index 4 was not processed. Error: edu.brown.cs.student.main.rowhandler.FactoryFailureException: Your row contains an empty entry
@@ -137,10 +73,10 @@ Row with index 10 was not processed. Error: edu.brown.cs.student.main.rowhandler
 ]]></system-out>
   </testcase>
   <testcase name="searchNotFoundNoNarrowNoHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
-  <testcase name="searchFoundNoNarrowHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.002"/>
-  <testcase name="testQuotesWithCommasFullLine" classname="edu.brown.cs.testing.TestingParseSearch" time="0"/>
-  <testcase name="fileNotFoundTest" classname="edu.brown.cs.testing.TestingParseSearch" time="0.005"/>
-  <testcase name="searchFoundIndexWithHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.551"/>
+  <testcase name="searchFoundNoNarrowHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
+  <testcase name="testQuotesWithCommasFullLine" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
+  <testcase name="fileNotFoundTest" classname="edu.brown.cs.testing.TestingParseSearch" time="0.004"/>
+  <testcase name="searchFoundIndexWithHeader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.595"/>
   <testcase name="searchHeaderDuplicate" classname="edu.brown.cs.testing.TestingParseSearch" time="0.002"/>
-  <testcase name="parseStringReader" classname="edu.brown.cs.testing.TestingParseSearch" time="0.001"/>
+  <testcase name="parseStringReader" classname="edu.brown.cs.testing.TestingParseSearch" time="0"/>
 </testsuite>

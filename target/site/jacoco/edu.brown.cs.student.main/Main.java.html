@@ -49,15 +49,19 @@ public final class Main {
       }
 <span class="nc" id="L50">      FileReader myReader = new FileReader(args[0]);</span>
 <span class="nc" id="L51">      RowHandler rowHandler = new RowHandler();</span>
-<span class="nc" id="L52">      boolean header = args[2].toLowerCase().equals(&quot;true&quot;);</span>
-<span class="nc" id="L53">      MyParser parser = new MyParser(new BufferedReader(myReader), rowHandler);</span>
-<span class="nc" id="L54">      parser.toParse();</span>
-<span class="nc" id="L55">      MySearcher searcher = new MySearcher(parser.getDataset(), header, narrow);</span>
-<span class="nc" id="L56">      searcher.findRows(args[1]);</span>
-<span class="nc" id="L57">      System.out.println(searcher.getFound());</span>
-<span class="nc" id="L58">    } catch (FileNotFoundException e) {</span>
-<span class="nc" id="L59">      System.err.println(&quot;Please make sure the path to your file is correct&quot;);</span>
-<span class="nc" id="L60">    }</span>
-<span class="nc" id="L61">  }</span>
+<span class="nc" id="L52">      MyParser parser = new MyParser(new BufferedReader(myReader), rowHandler);</span>
+<span class="nc" id="L53">      parser.toParse();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">      for (Object row : parser) {</span>
+<span class="nc" id="L55">        System.out.println(row);</span>
+<span class="nc" id="L56">      }</span>
+      //      System.out.println(parser.getDataset());
+<span class="nc" id="L58">      boolean header = args[2].toLowerCase().equals(&quot;true&quot;);</span>
+<span class="nc" id="L59">      MySearcher searcher = new MySearcher(parser.getDataset(), header, narrow);</span>
+<span class="nc" id="L60">      searcher.findRows(args[1]);</span>
+<span class="nc" id="L61">      System.out.println(searcher.getFound());</span>
+<span class="nc" id="L62">    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L63">      System.err.println(&quot;Please make sure the path to your file is correct&quot;);</span>
+<span class="nc" id="L64">    }</span>
+<span class="nc" id="L65">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
