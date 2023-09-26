@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: edu.brown.cs.testing.TestingParseSearch
 -------------------------------------------------------------------------------
-Tests run: 17, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.768 s <<< FAILURE! - in edu.brown.cs.testing.TestingParseSearch
-edu.brown.cs.testing.TestingParseSearch.searchNotFoundWrongNarrow  Time elapsed: 0.01 s  <<< FAILURE!
+Tests run: 17, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.787 s <<< FAILURE! - in edu.brown.cs.testing.TestingParseSearch
+edu.brown.cs.testing.TestingParseSearch.searchNotFoundWrongNarrow  Time elapsed: 0.012 s  <<< FAILURE!
 java.lang.AssertionError: expected:<1> but was:<0>
 	at org.testng.AssertJUnit.fail(AssertJUnit.java:65)
 	at org.testng.AssertJUnit.failNotEquals(AssertJUnit.java:467)
