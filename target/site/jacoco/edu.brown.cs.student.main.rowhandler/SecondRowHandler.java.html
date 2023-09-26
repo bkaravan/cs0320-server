@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecondRowHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">s0</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.student.main.rowhandler</a> &gt; <span class="el_source">SecondRowHandler.java</span></div><h1>SecondRowHandler.java</h1><pre class="source lang-java linenums">package edu.brown.cs.student.main.rowhandler;
+
+import edu.brown.cs.student.main.parser.ParsedRow;
+import java.util.List;
+
+/**
+ * SecondRowHandler is an example of a different implementation of the CreatorFromRow interface that
+ * uses the ParsedRow custom object.
+ */
+public class SecondRowHandler implements CreatorFromRow&lt;ParsedRow&gt; {
+
+  private int count;
+
+  /** The constructor initializes the count that helps to keep track of the array indices. */
+<span class="fc" id="L15">  public SecondRowHandler() {</span>
+<span class="fc" id="L16">    this.count = 0;</span>
+<span class="fc" id="L17">  }</span>
+
+  /**
+   * Create method creates a ParsedRow objects and returns it.
+   *
+   * @param row a list of strings from the parser
+   * @return ParsedRow from the input row
+   * @throws FactoryFailureException when something fails during RowMaking
+   */
+  public ParsedRow create(List&lt;String&gt; row) throws FactoryFailureException {
+<span class="fc" id="L27">    ParsedRow retRow = new ParsedRow(this.count, row);</span>
+<span class="fc" id="L28">    this.count++;</span>
+<span class="fc" id="L29">    return retRow;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

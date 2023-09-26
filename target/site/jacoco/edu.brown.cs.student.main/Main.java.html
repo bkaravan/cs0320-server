@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">s0</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.student.main</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package edu.brown.cs.student.main;
+
+import edu.brown.cs.student.main.parser.MyParser;
+import edu.brown.cs.student.main.rowhandler.FactoryFailureException;
+import edu.brown.cs.student.main.rowhandler.RowHandler;
+import edu.brown.cs.student.main.searcher.MySearcher;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+/** The Main class of our project. This is where execution begins. */
+public final class Main {
+
+  private String[] args;
+
+  /**
+   * The initial method called when execution begins.
+   *
+   * @param args An array of command line arguments
+   */
+  public static void main(String[] args) throws IOException, FactoryFailureException {
+<span class="nc" id="L23">    new Main(args).run();</span>
+<span class="nc" id="L24">  }</span>
+
+  /**
+   * These specs are repeated in the README and are vital for program to run smoothly: args[0] -
+   * string filepath args[1] - string searchWord args[2] - boolean for the header (&quot;True&quot;/&quot;False&quot;)
+   * args[3] - string for narrowing the search, that specifies either the name search or index
+   * search example: &quot;Ind: 0&quot;; &quot;Nam: Position&quot;.
+   *
+   * @param args the input parameters into the main function
+   */
+<span class="nc" id="L34">  private Main(String[] args) {</span>
+<span class="nc" id="L35">    this.args = args;</span>
+<span class="nc" id="L36">  }</span>
+
+  /** The method that runs Parser on the filepath and searcher on the dataset from the parser. */
+  private void run() {
+    try {
+<span class="nc" id="L41">      String narrow = &quot;&quot;;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">      if (args.length &lt; 3) {</span>
+<span class="nc" id="L43">        System.err.println(&quot;Please provide all necessary arguments: filepath, search word, header&quot;);</span>
+<span class="nc" id="L44">        System.exit(0);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">      } else if (args.length == 3) {</span>
+<span class="nc" id="L46">        narrow = &quot;NULL&quot;;</span>
+      } else {
+<span class="nc" id="L48">        narrow = args[3];</span>
+      }
+<span class="nc" id="L50">      FileReader myReader = new FileReader(args[0]);</span>
+<span class="nc" id="L51">      RowHandler rowHandler = new RowHandler();</span>
+<span class="nc" id="L52">      MyParser parser = new MyParser(new BufferedReader(myReader), rowHandler);</span>
+<span class="nc" id="L53">      parser.toParse();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">      for (Object row : parser) {</span>
+<span class="nc" id="L55">        System.out.println(row);</span>
+<span class="nc" id="L56">      }</span>
+      //      System.out.println(parser.getDataset());
+<span class="nc" id="L58">      boolean header = args[2].toLowerCase().equals(&quot;true&quot;);</span>
+<span class="nc" id="L59">      MySearcher searcher = new MySearcher(parser.getDataset(), header, narrow);</span>
+<span class="nc" id="L60">      searcher.findRows(args[1]);</span>
+<span class="nc" id="L61">      System.out.println(searcher.getFound());</span>
+<span class="nc" id="L62">    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L63">      System.err.println(&quot;Please make sure the path to your file is correct&quot;);</span>
+<span class="nc" id="L64">    }</span>
+<span class="nc" id="L65">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
