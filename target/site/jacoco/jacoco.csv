@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+s0,edu.brown.cs.student.main,Main,93,0,4,0,24,0,5,0,3,0
+s0,edu.brown.cs.student.main.parser,MyParser,8,90,1,5,3,25,1,6,0,4
+s0,edu.brown.cs.student.main.parser,ParsedRow,0,34,0,2,0,10,0,3,0,2
+s0,edu.brown.cs.student.main.searcher,MySearcher,18,165,2,19,9,36,2,15,0,6
+s0,edu.brown.cs.student.main.rowhandler,RowHandler,0,34,0,4,0,8,0,4,0,2
+s0,edu.brown.cs.student.main.rowhandler,SecondRowHandler,0,21,0,0,0,6,0,2,0,2
+s0,edu.brown.cs.student.main.rowhandler,FactoryFailureException,0,10,0,0,0,3,0,1,0,1

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MySearcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">s0</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.student.main.searcher</a> &gt; <span class="el_source">MySearcher.java</span></div><h1>MySearcher.java</h1><pre class="source lang-java linenums">package edu.brown.cs.student.main.searcher;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * MySearcher is a class that is responsible for searching through a given dataset of parsed data.
+ * In this implementation, the dataset is a list of list of strings, so the worst case scenario for
+ * the search of the word would be O(M * N), where M is the number of rows and N is the size of one
+ * row. MySearcher creates a List of every row that has a match with the search word and stores it
+ * as a field
+ */
+public class MySearcher {
+
+  private ArrayList&lt;List&lt;String&gt;&gt; found;
+
+  private final ArrayList&lt;List&lt;String&gt;&gt; dataset;
+  private int narrowIndex;
+  private final String narrow;
+  private final boolean isHeader;
+  private int startIndex;
+
+  /**
+   * Constructor for the MySearcher class.
+   *
+   * @param dataset dataset from MyParser
+   * @param header boolean value to indicate whether the dataset has a header
+   * @param key a string that narrows down the search, if provided by user. Defaults to NULL in main
+   */
+<span class="fc" id="L30">  public MySearcher(ArrayList&lt;List&lt;String&gt;&gt; dataset, boolean header, String key) {</span>
+<span class="fc" id="L31">    this.dataset = dataset;</span>
+<span class="fc" id="L32">    this.narrow = key;</span>
+<span class="fc" id="L33">    this.isHeader = header;</span>
+<span class="fc" id="L34">    this.setUp();</span>
+<span class="fc" id="L35">  }</span>
+
+  /**
+   * This method is in a way a helper method for the constructor. Based on the parameters that we
+   * take in, we change the startIndex and narrowIndex fields. If we have a header, we want to start
+   * looking for our matches starting with our second row in the dataset, hence the startIndex. The
+   * switch case of this method is responsible for determining whether a user indicated that the
+   * search is done through a name of the column, an index, or if it's a search of the whole dataset
+   */
+  private void setUp() {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (this.isHeader) {</span>
+<span class="fc" id="L46">      this.startIndex = 1;</span>
+    } else {
+<span class="fc" id="L48">      this.startIndex = 0;</span>
+    }
+<span class="fc" id="L50">    String match = this.narrow.substring(0, 4).toLowerCase();</span>
+<span class="fc bfc" id="L51" title="All 3 branches covered.">    switch (match) {</span>
+      case &quot;ind:&quot; -&gt; {
+        try {
+<span class="fc" id="L54">          this.narrowIndex = Integer.parseInt(this.narrow.substring(4).strip());</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">          if (this.narrowIndex &gt;= this.dataset.get(0).size()) {</span>
+<span class="nc" id="L56">            System.err.println(&quot;Please make sure that you provide a valid Index&quot;);</span>
+<span class="nc" id="L57">            System.exit(0);</span>
+          }
+<span class="nc" id="L59">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L60">          System.err.println(&quot;Please make sure to use an integer after Ind: &quot;);</span>
+<span class="nc" id="L61">          System.exit(0);</span>
+<span class="fc" id="L62">        }</span>
+<span class="nc" id="L63">      }</span>
+      case &quot;nam:&quot; -&gt; {
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (this.isHeader) {</span>
+<span class="fc" id="L66">          this.narrowIndex = this.dataset.get(0).indexOf(this.narrow.substring(4).strip());</span>
+        } else {
+<span class="nc" id="L68">          System.err.println(&quot;Please only search by column name when the header row is present&quot;);</span>
+<span class="nc" id="L69">          System.exit(0);</span>
+        }
+<span class="nc" id="L71">      }</span>
+<span class="fc" id="L72">      default -&gt; this.narrowIndex = -1;</span>
+    }
+<span class="fc" id="L74">  }</span>
+
+  /**
+   * indexSearch is only called when there is correct column index we are interested in (which is
+   * either a match with the colum name or index itself). IT ONLY LOOKS FOR ROW ENTRIES OF THAT
+   * INDEX
+   *
+   * @param toFind the search word
+   */
+  private void indexSearch(String toFind) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">    for (int i = this.startIndex; i &lt; this.dataset.size(); i++) {</span>
+<span class="fc" id="L85">      List&lt;String&gt; row = this.dataset.get(i);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">      if (row.get(this.narrowIndex).equals(toFind)) {</span>
+<span class="fc" id="L87">        this.found.add(row);</span>
+      }
+    }
+<span class="fc" id="L90">  }</span>
+
+  /**
+   * allSearch loops through the whole dataset and looks for any matches with the search word.
+   *
+   * @param toFind the search word
+   */
+  private void allSearch(String toFind) {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    for (int i = this.startIndex; i &lt; this.dataset.size(); i++) {</span>
+<span class="fc" id="L99">      List&lt;String&gt; row = this.dataset.get(i);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      for (String ele : row) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (ele.equals(toFind)) {</span>
+<span class="fc" id="L102">          this.found.add(row);</span>
+        }
+<span class="fc" id="L104">      }</span>
+    }
+<span class="fc" id="L106">  }</span>
+
+  /**
+   * public method that is called from the outside of this class, here it decides which search
+   * method to call based on the parameter narrowIndex.
+   *
+   * @param toFind the word we are looking for in the dataset
+   */
+  public void findRows(String toFind) {
+<span class="fc" id="L115">    this.found = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">    if (this.narrowIndex == -1) {</span>
+<span class="fc" id="L117">      this.allSearch(toFind);</span>
+    } else {
+<span class="fc" id="L119">      this.indexSearch(toFind);</span>
+    }
+<span class="fc" id="L121">  }</span>
+
+  /**
+   * A getter method for the found field of MySearcher class.
+   *
+   * @return the list of matches with the search word, if any were found
+   */
+  public ArrayList&lt;List&lt;String&gt;&gt; getFound() {
+<span class="fc" id="L129">    return this.found;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RowHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">s0</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.student.main.rowhandler</a> &gt; <span class="el_source">RowHandler.java</span></div><h1>RowHandler.java</h1><pre class="source lang-java linenums">package edu.brown.cs.student.main.rowhandler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * RowHandler is a class that is passed in MyParser in order to work with this particular
+ * implementation of MySearcher. It implements the CreatorFromRow array using ArrayList of Strings,
+ * so the dataset in MyParser becomes a list of list of string.
+ */
+<span class="fc" id="L11">public class RowHandler implements CreatorFromRow&lt;ArrayList&lt;String&gt;&gt; {</span>
+
+  /**
+   * Create class take in a list of strings, strips every string of spaces, and returns an ArrayList
+   * of the input List of Strings.
+   *
+   * @param row a list of strings that we are getting from parsing.
+   * @return an ArrayList of stings from the input that is stripped of spaces.
+   * @throws FactoryFailureException an exception that is thrown if any exceptions happen during row
+   *     creation.
+   */
+  public ArrayList&lt;String&gt; create(List&lt;String&gt; row) throws FactoryFailureException {
+<span class="fc" id="L23">    ArrayList&lt;String&gt; newRow = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">    for (String str : row) {</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">      if (str.isEmpty()) {</span>
+<span class="fc" id="L26">        throw new FactoryFailureException(&quot;Your row contains an empty entry&quot;, row);</span>
+      } else {
+<span class="fc" id="L28">        newRow.add(str.strip());</span>
+      }
+<span class="fc" id="L30">    }</span>
+<span class="fc" id="L31">    return newRow;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
