@@ -11,5 +11,4 @@ public class SearchHandler implements Route {
     // we either do a success response or a fail response
     return null;
   }
-
 }

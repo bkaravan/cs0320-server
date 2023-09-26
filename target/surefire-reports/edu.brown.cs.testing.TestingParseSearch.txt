@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: edu.brown.cs.testing.TestingParseSearch
 -------------------------------------------------------------------------------
-Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.842 s - in edu.brown.cs.testing.TestingParseSearch
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.905 s - in edu.brown.cs.testing.TestingParseSearch

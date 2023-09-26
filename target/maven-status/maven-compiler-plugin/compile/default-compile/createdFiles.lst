@@ -1,8 +1,5 @@
-edu\brown\cs\student\main\rowhandler\CreatorFromRow.class
-edu\brown\cs\student\main\searcher\MySearcher.class
-edu\brown\cs\student\main\Main.class
-edu\brown\cs\student\main\rowhandler\FactoryFailureException.class
-edu\brown\cs\student\main\parser\ParsedRow.class
-edu\brown\cs\student\main\rowhandler\RowHandler.class
-edu\brown\cs\student\main\rowhandler\SecondRowHandler.class
-edu\brown\cs\student\main\parser\MyParser.class
+edu/brown/cs/student/main/server/BroadbandHandler.class
+edu/brown/cs/student/main/server/ViewHandler.class
+edu/brown/cs/student/main/server/LoadHandler.class
+edu/brown/cs/student/main/server/SearchHandler.class
+edu/brown/cs/student/main/server/Server.class

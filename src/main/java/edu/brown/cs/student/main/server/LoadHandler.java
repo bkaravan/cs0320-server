@@ -11,7 +11,7 @@ public class LoadHandler implements Route {
   // create a parser field? feed in the parser here?
 
   public LoadHandler() {
-   // this.path = path;
+    // this.path = path;
   }
 
   @Override
@@ -23,10 +23,9 @@ public class LoadHandler implements Route {
       // a good response can be something like yay we loaded in the CSV!
     } catch (Exception e) {
       // return a bad response to say that we couldn't instantiate CSV
-      //return badanswer;
+      // return badanswer;
     }
 
     return null;
   }
-
 }

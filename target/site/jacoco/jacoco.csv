@@ -1,9 +1,14 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 s0,edu.brown.cs.student.main,Main,106,0,6,0,27,0,6,0,3,0
 s0,edu.brown.cs.student.main.parser,ParseIterator,38,0,0,0,12,0,4,0,4,0
-s0,edu.brown.cs.student.main.parser,MyParser,14,90,1,5,4,25,2,6,1,4
 s0,edu.brown.cs.student.main.parser,ParsedRow,0,34,0,2,0,10,0,3,0,2
+s0,edu.brown.cs.student.main.parser,MyParser,14,90,1,5,4,25,2,6,1,4
+s0,edu.brown.cs.student.main.server,SearchHandler,5,0,0,0,2,0,2,0,2,0
+s0,edu.brown.cs.student.main.server,Server,50,0,0,0,15,0,3,0,3,0
+s0,edu.brown.cs.student.main.server,BroadbandHandler,5,0,0,0,2,0,2,0,2,0
+s0,edu.brown.cs.student.main.server,LoadHandler,18,0,0,0,7,0,2,0,2,0
+s0,edu.brown.cs.student.main.server,ViewHandler,5,0,0,0,2,0,2,0,2,0
 s0,edu.brown.cs.student.main.searcher,MySearcher,18,165,2,19,9,36,2,15,0,6
 s0,edu.brown.cs.student.main.rowhandler,RowHandler,0,34,0,4,0,8,0,4,0,2
-s0,edu.brown.cs.student.main.rowhandler,SecondRowHandler,0,21,0,0,0,6,0,2,0,2
 s0,edu.brown.cs.student.main.rowhandler,FactoryFailureException,0,10,0,0,0,3,0,1,0,1
+s0,edu.brown.cs.student.main.rowhandler,SecondRowHandler,0,21,0,0,0,6,0,2,0,2
