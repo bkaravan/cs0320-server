@@ -15,10 +15,10 @@ import spark.Response;
 import spark.Route;
 
 public class LoadHandler<T> implements Route {
-  private Dataset<T> data;
+  private Dataset data;
   // create a parser field? feed in the parser here?
 
-  public LoadHandler(Dataset<T> current) {
+  public LoadHandler(Dataset current) {
     this.data = current;
   }
 
@@ -36,7 +36,7 @@ public class LoadHandler<T> implements Route {
         }
       }
 
-      MyParser<T> parser = new MyParser(freader, new Creator());
+      MyParser<List<String>> parser = new MyParser(freader, new Creator());
       parser.toParse();
       this.data.setDataset(parser.getDataset());
       return "File " + path + " loaded successfully!";

@@ -3,16 +3,16 @@ package edu.brown.cs.student.main.server;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dataset<T> {
-  private List<T> dataset = new ArrayList<T>();
+public class Dataset {
+  private List<List<String>> dataset = new ArrayList<>();
 
 
-  public void setDataset(List<T> data) {
+  public void setDataset(List<List<String>> data) {
     this.dataset = data;
   }
 
-  public List<T> getDataset() {
-    return new ArrayList<T>(this.dataset);
+  public List<List<String>> getDataset() {
+    return this.dataset;
   }
 
 }
