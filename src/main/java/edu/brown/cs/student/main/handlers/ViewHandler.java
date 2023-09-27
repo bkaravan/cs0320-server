@@ -43,12 +43,14 @@ public class ViewHandler implements Route {
       if (currentData.isEmpty()) {
         responseMap.put("type", "error");
         responseMap.put("error_type", "No files are loaded");
-//        return "No files!";
+        String json = adapter.toJson(responseMap);
+        System.out.println(json);
         return adapter.toJson(responseMap);
       }
       responseMap.put("type", "success");
       responseMap.put("view data", CSVDataAdapter.toJson(this.data));
-//      return "Somedata!";
+      String json = adapter.toJson(responseMap);
+      System.out.println(json);
       return adapter.toJson(responseMap);
     } catch (Exception e) {
       responseMap.put("type", "error");

@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class MySearcher {
 
-  private ArrayList<List<String>> found;
+  private ArrayList<List<String>> found = new ArrayList<>();
 
-  private final ArrayList<List<String>> dataset;
+  private final List<List<String>> dataset;
   private int narrowIndex;
   private final String narrow;
   private final boolean isHeader;
@@ -27,7 +27,7 @@ public class MySearcher {
    * @param header boolean value to indicate whether the dataset has a header
    * @param key a string that narrows down the search, if provided by user. Defaults to NULL in main
    */
-  public MySearcher(ArrayList<List<String>> dataset, boolean header, String key) {
+  public MySearcher(List<List<String>> dataset, boolean header, String key) {
     this.dataset = dataset;
     this.narrow = key;
     this.isHeader = header;
@@ -126,6 +126,6 @@ public class MySearcher {
    * @return the list of matches with the search word, if any were found
    */
   public ArrayList<List<String>> getFound() {
-    return this.found;
+    return new ArrayList(this.found);
   }
 }

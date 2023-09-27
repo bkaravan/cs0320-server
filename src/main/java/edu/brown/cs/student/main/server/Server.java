@@ -8,7 +8,7 @@ import edu.brown.cs.student.main.handlers.SearchHandler;
 import edu.brown.cs.student.main.handlers.ViewHandler;
 import spark.Spark;
 
-public class Server<T> {
+public class Server {
   public static void main(String[] args) {
     int port = 3232;
     //String path = args[0];

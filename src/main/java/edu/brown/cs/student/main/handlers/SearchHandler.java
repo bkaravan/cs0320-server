@@ -1,12 +1,20 @@
 package edu.brown.cs.student.main.handlers;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.searcher.MySearcher;
 import edu.brown.cs.student.main.server.Dataset;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class SearchHandler implements Route {
-  private Dataset data;
+  private final Dataset data;
 
   public SearchHandler(Dataset current) {
     this.data = current;
@@ -15,8 +23,48 @@ public class SearchHandler implements Route {
 
   @Override
   public Object handle(Request request, Response response) throws Exception {
-    // we either do a success response or a fail response
-    return null;
+    String narrow = "";
+    String headerS = "";
+    String search = "";
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+    JsonAdapter<List> CSVDataAdapter = moshi.adapter(List.class);
+    System.out.println(1);
+    Map<String, Object> responseMap = new HashMap<>();
+
+    try {
+      List<List<String>> currentData = this.data.getDataset();
+      if (currentData.isEmpty()) {
+        responseMap.put("type", "error");
+        responseMap.put("error_type", "No files are loaded");
+//        return "No files!";
+        return adapter.toJson(responseMap);
+      }
+
+      search = request.queryParams("search");
+      narrow = request.queryParams("narrow");
+      headerS = request.queryParams("header");
+      boolean header = headerS.equalsIgnoreCase("true");
+
+      MySearcher searcher = new MySearcher(currentData, header, narrow);
+      searcher.findRows(search);
+      List<List<String>> found = searcher.getFound();
+
+      responseMap.put("type", "success");
+      System.out.println(found);
+      responseMap.put("view data", CSVDataAdapter.toJson(found));
+//      return "Somedata!";
+      return adapter.toJson(responseMap);
+    } catch (Exception e) {
+      System.out.println(e);
+      responseMap.put("type", "error");
+      responseMap.put("error_type", e);
+      return adapter.toJson(responseMap);
+//      System.out.println(e);
+//      return "Booboo";
+    }
+
   }
 
 }
