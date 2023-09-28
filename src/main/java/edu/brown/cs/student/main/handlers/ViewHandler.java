@@ -3,16 +3,11 @@ package edu.brown.cs.student.main.handlers;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
-import edu.brown.cs.student.main.parser.MyParser;
 import edu.brown.cs.student.main.server.Dataset;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.swing.text.View;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -29,12 +24,16 @@ public class ViewHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
 
     Moshi moshi = new Moshi.Builder().build();
-//    System.out.println(1);
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
-//    System.out.println(2);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
 //    System.out.println(3);
-    JsonAdapter<Dataset> CSVDataAdapter = moshi.adapter(Dataset.class);
+//    Type type = Types.newParameterizedType(List.class, List.class, String.class);
+//    Type type1 = Types.newParameterizedType(List.class, String.class);
+//    JsonAdapter<List<String>> CSVDataAdapter1 = moshi.adapter(type1);
+    //JsonAdapter<Dataset> CSVDataAdapter2 = moshi.adapter(Dataset.class);
+
+
 //    System.out.println(4);
     Map<String, Object> responseMap = new HashMap<>();
 //    System.out.println(5);
@@ -43,12 +42,24 @@ public class ViewHandler implements Route {
       if (currentData.isEmpty()) {
         responseMap.put("type", "error");
         responseMap.put("error_type", "No files are loaded");
-        String json = adapter.toJson(responseMap);
-        System.out.println(json);
+//        String json = adapter.toJson(responseMap);
+//        System.out.println(json);
         return adapter.toJson(responseMap);
       }
+//      List<String> row = new ArrayList<>();
+//      for (List<String> rows : currentData) {
+//        row = rows;
+//        break;
+//      }
+//      String ex = "";
+//      for (String ele : row){
+//        ex = ele;
+//        break;
+//      }
+//      responseMap.put("2nd example", ex);
+//      responseMap.put("example", CSVDataAdapter1.toJson(row));
       responseMap.put("type", "success");
-      responseMap.put("view data", CSVDataAdapter.toJson(this.data));
+      responseMap.put("view data", currentData);
       String json = adapter.toJson(responseMap);
       System.out.println(json);
       return adapter.toJson(responseMap);
