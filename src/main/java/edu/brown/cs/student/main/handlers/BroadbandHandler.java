@@ -2,8 +2,10 @@ package edu.brown.cs.student.main.handlers;
 
 import static spark.Spark.connect;
 
+import com.squareup.moshi.Types;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import okio.Buffer;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -18,6 +20,21 @@ import java.net.URLConnection;
 import java.util.*;
 
 public class BroadbandHandler implements Route {
+
+//  public class CensusApiResponse {
+//    private List<String> headers;
+//    private List<StateInfo> states;
+//
+//    // Getters and setters for headers and states
+//
+//    public static class StateInfo {
+//      private String name;
+//      private String code;
+//
+//      // Getters and setters for name and code
+//    }
+//  }
+
 
   @Override
   public Object handle(Request request, Response response) throws Exception {
@@ -64,7 +81,6 @@ public class BroadbandHandler implements Route {
     } catch (IOException e) {
       throw new DatasourceException(e.getMessage());
     }
-
 //    try {
 //      URL requestURL = new URL("https", "api.weather.gov", "/points/"+lat+","+lon);
 //      HttpURLConnection clientConnection = connect(requestURL);
@@ -79,25 +95,111 @@ public class BroadbandHandler implements Route {
 //    } catch(IOException e) {
 //      throw new DatasourceException(e.getMessage());
 //    }
-
   }
 
   private String getStateCode(String stateName) throws IOException {
     // make an API request to get the state code based on the state name provided
     String apiUrl = "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*";
     HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
-
     try {
       connection.setRequestMethod("GET");
+      connection.connect();
+
       int responseCode = connection.getResponseCode();
 
       if (responseCode == HttpURLConnection.HTTP_OK) {
-       // parse through to get the state code
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<List<List<String>>> adapter = moshi.adapter(Types.newParameterizedType(List.class, List.class));
+
+        // Parse the JSON response into a List
+        List<List<String>> jsonResponse = adapter.fromJson(new Buffer().readFrom(connection.getInputStream()));
+
+        // Iterate through the list to find the state code for the target state name
+        for (List<String> row : jsonResponse) {
+          if (row.size() >= 2) {
+            String name = row.get(0);
+            String code = row.get(1);
+
+            if (stateName.equalsIgnoreCase(name)) {
+              System.out.println(code);
+              return code;
+            }
+          }
+        }
       }
     } finally {
       connection.disconnect();
+//    try {
+//      connection.setRequestMethod("GET");
+//      connection.connect();
+//
+//      //System.out.println("hi");
+//
+//      int responseCode = connection.getResponseCode();
+//
+//      // if connection success
+//      if (responseCode == HttpURLConnection.HTTP_OK) {
+//        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//        String inputLine;
+//        StringBuilder jsonResponse = new StringBuilder();
+//
+//        while ((inputLine = in.readLine()) != null) {
+//          jsonResponse.append(inputLine);
+//        }
+//        in.close();
+
+        // The jsonResponse StringBuilder now contains the JSON response
+
+        // Process the JSON data as needed
+
+
+
+        // Sample JSON response (replace with your actual response)
+//        String jsonResponse = "[[\"NAME\",\"state\"], [\"Alabama\",\"01\"], [\"Alaska\",\"02\"], ...]";
+//
+//        Moshi moshi = new Moshi.Builder().build();
+//        Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+//        JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+//
+//
+//        String stateCode = null;
+
+        // Iterate through the list and find the state code for the target state name
+//        for (List<String> row : jsonResponse) {
+//          if (row.size() >= 2) {
+//            String name = row.get(0);
+//            String code = row.get(1);
+//
+//            if (stateName.equals(name)) {
+//              stateCode = code;
+//              break; // Exit the loop when the state name is found
+//            }
+//          }
+//        }
+
+
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+//        // Create a Moshi adapter
+//        Moshi moshi = new Moshi.Builder().build();
+//        JsonAdapter<CensusApiResponse> adapter = moshi.adapter(CensusApiResponse.class);
+//
+//        // Deserialize the JSON response into a CensusApiResponse object
+//        CensusApiResponse response = adapter.fromJson(apiResponseJson);
+
+
+//        String line;
+//        while ((line = reader.readLine()) != null) {
+//          // Assuming the response is in CSV format, parse it to extract state codes
+//
+//
+//
+//          System.out.println(line);
+//        }
+//      }
+//    } finally {
+//      connection.disconnect();
     }
-    // Return null if state name not found?
     return null;
   }
 
