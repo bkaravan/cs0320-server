@@ -31,10 +31,7 @@ public class SearchHandler implements Route {
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
-    JsonAdapter<List> CSVDataAdapter = moshi.adapter(List.class);
-    System.out.println(1);
     Map<String, Object> responseMap = new HashMap<>();
-
     try {
       List<List<String>> currentData = this.data.getDataset();
       if (currentData.isEmpty()) {
@@ -51,7 +48,7 @@ public class SearchHandler implements Route {
 
       responseMap.put("type", "success");
       System.out.println(found);
-      responseMap.put("view data", CSVDataAdapter.toJson(found));
+      responseMap.put("view data", searcher.getFound());
 //      return "Somedata!";
       return adapter.toJson(responseMap);
     } catch (Exception e) {
