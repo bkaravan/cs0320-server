@@ -48,6 +48,8 @@ public class BroadbandHandler implements Route {
     String stateCode = getStateCode(stateName);
     String countyCode = getCountyCode(stateCode, countyName);
 
+    System.out.println(timestamp);
+
     // request data for given state and county
     if (stateCode != null && countyCode != null) {
 
@@ -135,6 +137,7 @@ public class BroadbandHandler implements Route {
             String code = row.get(1);
 
             if (stateName.equalsIgnoreCase(name)) {
+              System.out.println(stateName + ": " + code);
               return code;
             }
           }
@@ -179,6 +182,8 @@ public class BroadbandHandler implements Route {
 
                 // Check if the county name and state match the user's request
                 if (countyName.equalsIgnoreCase(cName)) {
+                  System.out.println(countyName + ": " + countyCode);
+
                   return countyCode;
                 }
               }
