@@ -23,9 +23,10 @@ public class SearchHandler implements Route {
 
   @Override
   public Object handle(Request request, Response response) throws Exception {
-    String narrow = "";
-    String headerS = "";
-    String search = "";
+    String search = request.queryParams("search");
+    String narrow = request.queryParams("narrow");
+    String headerS = request.queryParams("header");
+
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
@@ -42,9 +43,6 @@ public class SearchHandler implements Route {
         return adapter.toJson(responseMap);
       }
 
-      search = request.queryParams("search");
-      narrow = request.queryParams("narrow");
-      headerS = request.queryParams("header");
       boolean header = headerS.equalsIgnoreCase("true");
 
       MySearcher searcher = new MySearcher(currentData, header, narrow);
