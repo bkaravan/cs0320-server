@@ -111,17 +111,17 @@ public class BroadbandHandler implements Route {
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<List<List<String>>> adapter = moshi.adapter(Types.newParameterizedType(List.class, List.class));
 
-        // Parse the JSON response into a List
+        // parse the json response into a List
         List<List<String>> jsonResponse = adapter.fromJson(new Buffer().readFrom(connection.getInputStream()));
 
-        // Iterate through the list to find the state code for the target state name
+        // iterate through the list to find the state code for the target state name
         for (List<String> row : jsonResponse) {
           if (row.size() >= 2) {
             String name = row.get(0);
             String code = row.get(1);
 
             if (stateName.equalsIgnoreCase(name)) {
-              System.out.println(code);
+              System.out.println(stateName + ": " + code);
               return code;
             }
           }
@@ -204,27 +204,60 @@ public class BroadbandHandler implements Route {
   }
 
   private String getCountyCode(String stateCode, String countyName) throws IOException {
-    // make an API request to get the state code based on the county name and state code provided
-    String apiUrl = "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" + stateCode;
-    HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
+    // api request to get county code based on county name and state code
+    if (stateCode != null) {
+      String apiUrl = "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" + stateCode;
 
-    try {
-      connection.setRequestMethod("GET");
-      int responseCode = connection.getResponseCode();
+      HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
 
-      if (responseCode == HttpURLConnection.HTTP_OK) {
-        // get the county code
+      try {
+        connection.setRequestMethod("GET");
+        connection.connect();
+
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+          Moshi moshi = new Moshi.Builder().build();
+          JsonAdapter<List<List<String>>> adapter = moshi.adapter(Types.newParameterizedType(List.class, List.class));
+
+          // Parse the JSON response into a List
+          List<List<String>> jsonResponse = adapter.fromJson(new Buffer().readFrom(connection.getInputStream()));
+
+          // Iterate through the list to find the county code for the target county name
+          for (List<String> row : jsonResponse) {
+            if (row.size() >= 3) {
+              String fullName = row.get(0);
+//              System.out.println("llll" + fullName + "llll");
+//              String sCode = row.get(1);
+              String countyCode = row.get(2);
+              // Split the full name to extract the county name
+              String[] parts = fullName.split(",");
+//              System.out.println(parts);
+              if (parts.length >= 2) {
+                String cName = parts[0].trim(); // Extracted county name
+//                System.out.println(cName);
+
+                // Check if the county name and state match the user's request
+                if (countyName.equalsIgnoreCase(cName)) {
+                  System.out.println(cName + ": " + countyCode);
+                  return countyCode;
+                }
+              }
+            }
+
+          }
+        }
+      } finally {
+        connection.disconnect();
       }
-    } finally {
-      connection.disconnect();
     }
 
-    // Return null if county name not found?
+    // Return null if county name not found
     return null;
   }
 
   public record GridResponse(String id, GridResponseProperties properties) { }
   // Note: case matters! "gridID" will get populated with null, because "gridID" != "gridId"
-  public record GridResponseProperties(String gridId, String gridX, String gridY, String timeZone, String radarStation) {}
+  public record GridResponseProperties(String gridId) {}
 
 }
