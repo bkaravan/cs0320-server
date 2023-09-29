@@ -22,6 +22,7 @@ import spark.Route;
  * query parameter specifying the path to the CSV file to be loaded, taking in a specified Dataset.
  */
 public class LoadHandler implements Route {
+
   private final Dataset data;
 
   /**
@@ -40,10 +41,10 @@ public class LoadHandler implements Route {
    * loading, it updates the dataset in the `Dataset` object, and if an error occurs during loading,
    * it generates a JSON response indicating the failure.
    *
-   * @param request the HTTP request containing the file path to load.
+   * @param request  the HTTP request containing the file path to load.
    * @param response the HTTP response to be populated with success or failure messages.
    * @return a success message if the file is loaded successfully; otherwise, a loading failure
-   *     message in JSON format.
+   * message in JSON format.
    * @throws Exception if an error occurs during file loading or response construction.
    */
   @Override
@@ -64,6 +65,7 @@ public class LoadHandler implements Route {
       FileReader freader = new FileReader(path);
       //      RowHandler creator = new RowHandler();
       class Creator implements CreatorFromRow<List<String>> {
+
         @Override
         public List<String> create(List<String> row) throws FactoryFailureException {
           return row;
@@ -81,8 +83,11 @@ public class LoadHandler implements Route {
     }
   }
 
-  /** A record representing a loading failure response. It can be serialized to JSON format. */
+  /**
+   * A record representing a loading failure response. It can be serialized to JSON format.
+   */
   public record LoadingFailureResponse(String response_type) {
+
     /**
      * @return this response, serialized as Json
      */

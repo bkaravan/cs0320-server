@@ -34,7 +34,7 @@ public class ViewHandler implements Route {
    * Method that handles an HTTP request to retrieve and view the dataset's contents. Constructs a
    * success response with the contents or an error response in JSON format.
    *
-   * @param request the HTTP request.
+   * @param request  the HTTP request.
    * @param response the HTTP response to be populated with dataset contents or error messages.
    * @return an HTTP response containing the dataset's contents or error messages in JSON format.
    * @throws Exception if an error occurs during dataset retrieval or response construction.

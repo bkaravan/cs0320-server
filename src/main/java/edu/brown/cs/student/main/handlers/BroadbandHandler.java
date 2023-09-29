@@ -27,7 +27,7 @@ public class BroadbandHandler implements Route {
    * This method communicates with an external ACS API to retrieve broadband access statistics, and
    * constructs an HTTP response containing the retrieved data or appropriate error messages.
    *
-   * @param request the HTTP request containing query parameters for state and county.
+   * @param request  the HTTP request containing query parameters for state and county.
    * @param response the HTTP response to be populated with broadband data or error messages.
    * @return null, as the data or error messages are added to the HTTP response.
    * @throws Exception if an error occurs during data retrieval or processing.
@@ -183,7 +183,7 @@ public class BroadbandHandler implements Route {
    * Helper method that makes an API request to retrieve the county code based on the provided state
    * code and county name. Returns null if county name not found.
    *
-   * @param stateCode the state code for the target state.
+   * @param stateCode  the state code for the target state.
    * @param countyName the name of the county for which to retrieve the code.
    * @return the county code corresponding to the provided state code and county name.
    * @throws IOException if an error occurs during the API request.

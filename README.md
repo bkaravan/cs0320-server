@@ -1,7 +1,7 @@
 # Server
 
 ### Completed by Bohdan Karavan (bkaravan) and Jeffrey Tao (jtao25)
-This project took about 16 hours to complete.
+This project took about 25 hours to complete.
 Here is the [Github repo](https://github.com/cs0320-f23/server-bkaravan-jtao25.git)
 
 ## About
@@ -60,6 +60,8 @@ here. `current` is a `Dataset Object` that stores data loaded from CSV files, wh
 We created a `Dataset` class that serves as a central data structure for storing the CSV data that is loaded into the server,
 using a nested list structure `List<List<String>>`to represent the data. `LoadHandler`, `ViewHandler`, and
 `SearchHandler` take in `Dataset` to access the loaded CSV for processing and responding to their respective requests.
+The runtime of our search should be consistent with the runtime of MySearch class, when we are parsing and searching
+CSV files. 
 
 ## Bugs and Testing
 **Bugs**
@@ -68,6 +70,10 @@ At the time of writing this README, no bugs are observed.
 
 **Testing**
 
+All the test for our Server are present in our `TestingServer` class. It creates a comprehensive check of 
+every handler that we use, and uses mock testing technique on our `ViewHandler` and `SearchHandler`. Unfortunately, due to 
+the way we implemented `BroadbandHandler`, we weren't able to mock test that specific class, but our Jacoco report still shows
+more than 80% coverage on that class.
 
 ## Usage and How-To
 ### Developer POV

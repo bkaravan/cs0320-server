@@ -22,6 +22,7 @@ import spark.Route;
  * between the HTTP request path.
  */
 public class SearchHandler implements Route {
+
   private final Dataset data;
 
   /**
@@ -40,7 +41,7 @@ public class SearchHandler implements Route {
    * search operation and constructs a success response with the search results or an error
    * response.
    *
-   * @param request the HTTP request containing search parameters.
+   * @param request  the HTTP request containing search parameters.
    * @param response the HTTP response to be populated with search results or error messages.
    * @return an HTTP response containing search results or error messages in JSON format.
    * @throws Exception if an error occurs during the search or response construction.

@@ -55,8 +55,8 @@ class TestingServer {
   }
 
   /**
-   * Shared state for all tests. We need to be able to mutate it (adding recipes etc.) but never
-   * need to replace the reference itself. We clear this state out after every test runs.
+   * Shared state for all tests. We create a setup for spark to see our handlers, and also
+   * set up our mocked data for test usage
    */
   @BeforeEach
   public void setup() {
@@ -86,6 +86,10 @@ class TestingServer {
     Spark.init();
     Spark.awaitInitialization(); // don't continue until the server is listening
   }
+
+  /**
+   * Teardown and stop Spark after each test
+   */
 
   @AfterEach
   public void teardown() {
@@ -121,10 +125,19 @@ class TestingServer {
     return clientConnection;
   }
 
+  /**
+   * A class to store information about the successful response from Loading.
+   */
+
   public static class SuccessResponseLoadCSV {
     public String result;
     public String loaded;
   }
+
+  /**
+   * Test to check if we are able to successfully load a CSV with a header.
+   * @throws IOException
+   */
 
   @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
@@ -135,21 +148,21 @@ class TestingServer {
     assertEquals(200, clientConnection.getResponseCode());
 
     Moshi moshi = new Moshi.Builder().build();
-    //    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
-    //    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
     SuccessResponseLoadCSV response =
         moshi
             .adapter(SuccessResponseLoadCSV.class)
             .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
 
-    //    System.out.println(response.Loaded);
-    //    System.out.println(response.result);
-
     clientConnection.disconnect();
     assertEquals("success", response.result);
     assertEquals("data/stars/stardata.csv", response.loaded);
   }
+
+  /**
+   * Test to see if we are able to successfully load CSV without a header.
+   * @throws IOException
+   */
 
   @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
@@ -161,26 +174,28 @@ class TestingServer {
     assertEquals(200, clientConnection.getResponseCode());
 
     Moshi moshi = new Moshi.Builder().build();
-    //    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
-    //    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
     SuccessResponseLoadCSV response =
         moshi
             .adapter(SuccessResponseLoadCSV.class)
             .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-
-    //    System.out.println(response.Loaded);
-    //    System.out.println(response.result);
-
     clientConnection.disconnect();
     assertEquals("success", response.result);
     assertEquals("data/csvtest/noHeaderTest.csv", response.loaded);
   }
 
+  /**
+   * Class to store a failed loading response.
+   */
   public static class FailResponseLoadCSV {
 
     public String response_type;
   }
+
+  /**
+   * Test to see how we handle an incorrect path.
+   * @throws IOException
+   */
 
   @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
@@ -204,12 +219,20 @@ class TestingServer {
     assertEquals("error_datasource: data/stars/stardataFALSE.csv", response.response_type);
   }
 
+  /**
+   * Class to store data about calling load without proper parameters
+   */
+
   public static class MissingFilepath {
 
     public String error_type;
     public String missing_argument;
   }
 
+  /**
+   * Test for loading without providing a filepath.
+   * @throws IOException
+   */
   @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
   // checker
@@ -231,11 +254,18 @@ class TestingServer {
     assertEquals("filepath", response.missing_argument);
   }
 
+  /**
+   * Class to store successful response to view after loading
+   */
   public static class ViewSuccessResponse {
     public String result;
     public List<List<String>> viewData;
   }
 
+  /**
+   * Test for successful viewing
+   * @throws IOException
+   */
   @Test
   public void testViewCSVSuccess() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
@@ -262,11 +292,19 @@ class TestingServer {
     assertEquals(check, response.viewData.get(0));
   }
 
+  /**
+   * Class to store information about Viewing Errors.
+   */
+
   public static class ViewNoFileResponse {
     public String type;
     public String error_type;
   }
 
+  /**
+   * Test to view without prior loading.
+   * @throws IOException
+   */
   @Test
   public void testViewNoFileLoaded() throws IOException {
     HttpURLConnection clientConnection = tryRequest("viewcsv");
@@ -283,6 +321,11 @@ class TestingServer {
     assertEquals("error", response.type);
     assertEquals("No files are loaded", response.error_type);
   }
+
+  /**
+   * Testing search without prior loading
+   * @throws IOException
+   */
 
   @Test
   public void testSearchNoFileLoaded() throws IOException {
@@ -301,11 +344,19 @@ class TestingServer {
     assertEquals("No files are loaded", response.error_type);
   }
 
+  /**
+   * Class to store an error response to improper arguments of search
+   */
   public static class SearchMissingArgResponse {
     public String type;
     public String error_type;
     public String error_arg;
   }
+
+  /**
+   * Test for search without a required argument search
+   * @throws IOException
+   */
 
   @Test
   public void testSearchCSVMissingArgSearch() throws IOException {
@@ -329,6 +380,10 @@ class TestingServer {
     assertEquals("search", response.error_arg);
   }
 
+  /**
+   * Test for search without the required argument header
+   * @throws IOException
+   */
   @Test
   public void testSearchCSVMissingArgHeader() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
@@ -351,11 +406,18 @@ class TestingServer {
     assertEquals("header", response.error_arg);
   }
 
+  /**
+   * Class to store response for found Search.
+   */
   public static class SearchFoundResponse {
     public String result;
     public List<List<String>> view_data;
   }
 
+  /**
+   * Test that search runs when Provided all arguments (index)
+   * @throws IOException
+   */
   @Test
   public void searchCSVFoundAllArgs() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
@@ -381,6 +443,39 @@ class TestingServer {
     assertEquals(check, response.view_data.get(0));
   }
 
+  /**
+   * Test that search runs when Provided all arguments (Name)
+   * @throws IOException
+   */
+  @Test
+  public void searchCSVFoundAllArgsName() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=right&header=true&nam:position");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchFoundResponse response =
+        moshi
+            .adapter(SearchFoundResponse.class)
+            .fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("success", response.result);
+    List<String> check = new ArrayList<>();
+    check.add("jake");
+    check.add("second");
+    check.add("right");
+    assertEquals(check, response.view_data.get(0));
+  }
+
+  /**
+   * Test searching for correctly finding without the third argument.
+   * @throws IOException
+   */
   @Test
   public void searchCSVFoundNoNarrow() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
@@ -406,6 +501,10 @@ class TestingServer {
     assertEquals(check, response.view_data.get(1));
   }
 
+  /**
+   * Class to store a response when search ran but didn't find anything.
+   */
+
   public static class SearchNotFoundResponse {
     public String type;
     public String error_type;
@@ -413,6 +512,10 @@ class TestingServer {
     public String specifier;
   }
 
+  /**
+   * Testing for looking for a word that is not there
+   * @throws IOException
+   */
   @Test
   public void searchCSVNotFound() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/stars/ten-star.csv");
@@ -435,6 +538,11 @@ class TestingServer {
     assertEquals("HELLO", response.search_word);
   }
 
+  /**
+   * Testing to see if we specify the index where we look for, the searchword is present in the
+   * document but is not in that index, and the searcher doesn't find it
+   * @throws IOException
+   */
   @Test
   public void searchCSVNotFoundAllArgs() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/stars/ten-star.csv");
@@ -459,6 +567,10 @@ class TestingServer {
     assertEquals("ind:2", response.specifier);
   }
 
+  /**
+   * Test for searcher to find things without a header
+   * @throws IOException
+   */
   @Test
   public void searchCSVFoundNoHeader() throws IOException {
     HttpURLConnection clientConnection =
@@ -485,6 +597,10 @@ class TestingServer {
     assertEquals(check, response.view_data.get(0));
   }
 
+  /**
+   * Class to store good responses to broadband searches.
+   */
+
   public static class BroadbandSuccess {
     public String result;
     public String state;
@@ -492,6 +608,10 @@ class TestingServer {
     public String broadband_access;
   }
 
+  /**
+   * Testing for correctly finding information for provided state and county
+   * @throws IOException
+   */
   @Test
   public void broadbandFound() throws IOException {
     HttpURLConnection clientConnection =
@@ -513,6 +633,9 @@ class TestingServer {
     assertEquals("92.8", response.broadband_access);
   }
 
+  /**
+   * Class to store failed responses from broadband
+   */
   public static class BroadbandFail {
     public String type;
     public String no_county;
@@ -520,6 +643,10 @@ class TestingServer {
     public String error_type;
   }
 
+  /**
+   * Testing to handle incorrect county spelling
+   * @throws IOException
+   */
   @Test
   public void broadbandNoCountyFound() throws IOException {
     HttpURLConnection clientConnection =
@@ -539,6 +666,10 @@ class TestingServer {
     assertEquals("Pravidence County", response.no_county);
   }
 
+  /**
+   * Testing to handle incorrect state spelling
+   * @throws IOException
+   */
   @Test
   public void broadbandNoStateFound() throws IOException {
     HttpURLConnection clientConnection =
@@ -558,6 +689,10 @@ class TestingServer {
     assertEquals("Rhade Island", response.no_state);
   }
 
+  /**
+   * Testing for broadband without arguments
+   * @throws IOException
+   */
   @Test
   public void broadbandNoArgsFound() throws IOException {
     HttpURLConnection clientConnection = tryRequest("broadband?");
@@ -580,6 +715,10 @@ class TestingServer {
   // In our implementation, it is really challenging to mock how broadbandhandler works
   // So, instead, we mocked how our custom handlers work
 
+  /**
+   * Mock with a local json file
+   * @throws IOException
+   */
   @Test
   public void testViewNoFileLoadedMock() throws IOException {
     String json = new String(Files.readAllBytes(Paths.get("data/Mocks/mocktest1.json")));
@@ -592,6 +731,10 @@ class TestingServer {
     assertEquals("No files are loaded", response.error_type);
   }
 
+  /**
+   * Mock the view handler
+   * @throws IOException
+   */
   @Test
   public void testViewFileLoadedMocked() throws IOException {
     HttpURLConnection clientConnection2 = tryRequest("viewcsv2");
@@ -613,6 +756,10 @@ class TestingServer {
     assertEquals(ex, response.viewData.get(0));
   }
 
+  /**
+   * Mock the search when we give it all arguments
+   * @throws IOException
+   */
   @Test
   public void testSearchMockedDatasourceFoundAllArgs() throws IOException {
     HttpURLConnection clientConnection2 =
@@ -635,6 +782,10 @@ class TestingServer {
     assertEquals(check, response.view_data.get(0));
   }
 
+  /**
+   * Mocking for search that successfully finds with two arguments
+   * @throws IOException
+   */
   @Test
   public void testSearchMockedDatasourceFound2Args() throws IOException {
     HttpURLConnection clientConnection2 = tryRequest("searchcsv2?search=first1&header=false");
@@ -656,6 +807,10 @@ class TestingServer {
     assertEquals(check, response.view_data.get(0));
   }
 
+  /**
+   * mock searching and looking for the word that is not there.
+   * @throws IOException
+   */
   @Test
   public void testSearchMockedDatasourceNotFound() throws IOException {
     HttpURLConnection clientConnection2 = tryRequest("searchcsv2?search=NOTHERE&header=false");
