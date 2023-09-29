@@ -13,9 +13,23 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+
+/**
+ * The SearchHandler class is responsible for handling GET requests for searching the loaded CSV data.
+ * It takes in Dataset as a parameter along with query paramaters for the search. It uses the
+ * provided query parameters to perform a search operation (using the MySearcher class) on the dataset,
+ * constructs a JSON response containing the results, and handles errors by returning the appropriate
+ * messages in JSON. Implements the `Route` Spark interface in order to create a mapping between
+ * the HTTP request path.
+ */
 public class SearchHandler implements Route {
   private final Dataset data;
 
+  /**
+   * Constructs a new SearchHandler instance with the specified Dataset.
+   *
+   * @param current the Dataset to be used for searching.
+   */
   public SearchHandler(Dataset current) {
     this.data = current;
 
@@ -23,6 +37,17 @@ public class SearchHandler implements Route {
 
   // narrow = "ind: 0" "nam: someName"
 
+  /**
+   * Method that handles an HTTP request to perform a search within the dataset. Extracts search
+   * parameters (search, narrow, header) from the HTTP request. Creates a MySearcher to
+   * perform search operation and constructs a success response with the search results or an
+   * error response.
+   *
+   * @param request  the HTTP request containing search parameters.
+   * @param response the HTTP response to be populated with search results or error messages.
+   * @return an HTTP response containing search results or error messages in JSON format.
+   * @throws Exception if an error occurs during the search or response construction.
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
     String search = request.queryParams("search");

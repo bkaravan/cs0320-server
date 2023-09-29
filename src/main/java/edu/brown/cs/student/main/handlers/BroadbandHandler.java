@@ -20,6 +20,12 @@ import com.squareup.moshi.Moshi;
 import java.net.URLConnection;
 import java.util.*;
 
+/**
+ * The BroadbandHandler class handles HTTP requests related to broadband data retrieval.
+ * It communicates with an external ACS API to fetch data on broadband access for a user-specified
+ * state and county. Implements the `Route` Spark interface in order to create a mapping between
+ * the HTTP request path.
+ */
 public class BroadbandHandler implements Route {
 
 //  public class CensusApiResponse {
@@ -36,7 +42,16 @@ public class BroadbandHandler implements Route {
 //    }
 //  }
 
-
+  /**
+   * Method that handles an HTTP request to fetch broadband data for a specified state and county.
+   * This method communicates with an external ACS API to retrieve broadband access statistics, and
+   * constructs an HTTP response containing the retrieved data or appropriate error messages.
+   *
+   * @param request  the HTTP request containing query parameters for state and county.
+   * @param response the HTTP response to be populated with broadband data or error messages.
+   * @return null, as the data or error messages are added to the HTTP response.
+   * @throws Exception if an error occurs during data retrieval or processing.
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // get date and time
@@ -52,6 +67,7 @@ public class BroadbandHandler implements Route {
 
     // request data for given state and county
     if (stateCode != null && countyCode != null) {
+      System.out.println("e");
 
       try {
         String apiKey = "api_key";
@@ -107,12 +123,25 @@ public class BroadbandHandler implements Route {
     return null;
   }
 
+  /**
+   * Helper method that retrieves the current date and time of the request in a specific format.
+   *
+   * @return a formatted string representing the current date and time.
+   */
   private String getDateTime() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date now = new Date();
     return dateFormat.format(now);
   }
 
+  /**
+   * Helper method that makes an API request to retrieve the state code based on the provided state name.
+   * Returns null if state name not found.
+   *
+   * @param stateName the name of the state for which to retrieve the code.
+   * @return the state code corresponding to the provided state name.
+   * @throws IOException if an error occurs during the API request.
+   */
   private String getStateCode(String stateName) throws IOException {
     // make an API request to get the state code based on the state name provided
     String apiUrl = "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*";
@@ -149,6 +178,15 @@ public class BroadbandHandler implements Route {
     return null;
   }
 
+  /**
+   * Helper method that makes an API request to retrieve the county code based on the provided
+   * state code and county name. Returns null if county name not found.
+   *
+   * @param stateCode  the state code for the target state.
+   * @param countyName the name of the county for which to retrieve the code.
+   * @return the county code corresponding to the provided state code and county name.
+   * @throws IOException if an error occurs during the API request.
+   */
   private String getCountyCode(String stateCode, String countyName) throws IOException {
     // api request to get county code based on county name and state code
     if (stateCode != null) {
