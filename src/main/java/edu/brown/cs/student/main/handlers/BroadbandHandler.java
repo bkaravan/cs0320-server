@@ -20,8 +20,24 @@ import com.squareup.moshi.Moshi;
 import java.net.URLConnection;
 import java.util.*;
 
+/**
+ * The BroadbandHandler class handles HTTP requests related to broadband data retrieval.
+ * It communicates with an external ACS API to fetch data on broadband access for a user-specified
+ * state and county. Implements the `Route` Spark interface in order to create a mapping between
+ * the HTTP request path.
+ */
 public class BroadbandHandler implements Route {
 
+  /**
+   * Method that handles an HTTP request to fetch broadband data for a specified state and county.
+   * This method communicates with an external ACS API to retrieve broadband access statistics, and
+   * constructs an HTTP response containing the retrieved data or appropriate error messages.
+   *
+   * @param request  the HTTP request containing query parameters for state and county.
+   * @param response the HTTP response to be populated with broadband data or error messages.
+   * @return null, as the data or error messages are added to the HTTP response.
+   * @throws Exception if an error occurs during data retrieval or processing.
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // get date and time
@@ -33,16 +49,17 @@ public class BroadbandHandler implements Route {
     String stateCode = getStateCode(stateName);
     String countyCode = getCountyCode(stateCode, countyName);
 
+    //setup our moshi to send the response back to the user
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
-    JsonAdapter<Map<String, Object>> adapter2 = moshi.adapter(mapStringObject);
+    JsonAdapter<Map<String, Object>> responseAdapter = moshi.adapter(mapStringObject);
     Map<String, Object> responseMap = new HashMap<>();
 
-    // request data for given state and county
-    if (stateCode != null && countyCode != null) {
+    // if we got both the statecode and the county code
+    if (!stateCode.equals("null") && !countyCode.equals("null")) {
 
       try {
-//        String apiKey = "api_key";
+        //set up the URL
         String apiUrl = "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_001E&for=county:" +
             countyCode + "&in=state:" + stateCode;
 
@@ -51,58 +68,67 @@ public class BroadbandHandler implements Route {
         HttpURLConnection requestURL = (HttpURLConnection) url.openConnection();
 
         int responseCode = requestURL.getResponseCode();
-
+        //check that the response was good
         if (responseCode == HttpURLConnection.HTTP_OK) {
+          //deserialize the response
           JsonAdapter<List<String[]>> adapter = moshi.adapter(Types.newParameterizedType(List.class, String[].class));
-
+          //try to read from the file and get the data
           try (Buffer newBuffer = new Buffer().readFrom(requestURL.getInputStream())) {
 
             List<String[]> jsonResponse = adapter.fromJson(newBuffer);
 
-            // get data from json
+            // get data from json, it is the row of index one, second entry for broadband access data
             String broadbandData = jsonResponse.get(1)[1];
 
-            // response map w timestamp and data
+            // fill our response map with correct data and send it back
             responseMap.put("result", "success");
             responseMap.put("state", stateName);
             responseMap.put("county", countyName);
             responseMap.put("timestamp", timestamp);
             responseMap.put("broadband access", broadbandData);
-            return adapter2.toJson(responseMap);
+            return responseAdapter.toJson(responseMap);
           } catch (Exception e) {
-            System.out.println(e);
-            responseMap.put("error_type", e);
-            return adapter2.toJson(responseMap);
+            responseMap.put("error", "error_bad_json");
+            return responseAdapter.toJson(responseMap);
           }
-          // parse json into map
-
-
         } else {
           // handle failed API request
           throw new DatasourceException("API request failed with response code: " + responseCode);
         }
-
       } catch (IOException e) {
         throw new DatasourceException(e.getMessage());
       } catch (Exception e) {
         responseMap.put("error_type", e);
-        return adapter2.toJson(responseMap);
+        return responseAdapter.toJson(responseMap);
       }
     }
-    if (stateCode == null) {
+    if (!stateCode.equals("null")) {
       responseMap.put("Could not find state", stateName);
     }
     responseMap.put("Could not find county", countyName);
-    responseMap.put("error_type", "Not found county or state");
-    return adapter2.toJson(responseMap);
+    responseMap.put("error_type", "error_bad_request");
+    return responseAdapter.toJson(responseMap);
   }
 
+  /**
+   * Helper method that retrieves the current date and time of the request in a specific format.
+   *
+   * @return a formatted string representing the current date and time.
+   */
   private String getDateTime() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date now = new Date();
     return dateFormat.format(now);
   }
 
+  /**
+   * Helper method that makes an API request to retrieve the state code based on the provided state name.
+   * Returns null if state name not found.
+   *
+   * @param stateName the name of the state for which to retrieve the code.
+   * @return the state code corresponding to the provided state name.
+   * @throws IOException if an error occurs during the API request.
+   */
   private String getStateCode(String stateName) throws IOException {
     // make an API request to get the state code based on the state name provided
     String apiUrl = "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*";
@@ -139,9 +165,18 @@ public class BroadbandHandler implements Route {
     finally {
       connection.disconnect();
     }
-    return null;
+    return "null";
   }
 
+  /**
+   * Helper method that makes an API request to retrieve the county code based on the provided
+   * state code and county name. Returns null if county name not found.
+   *
+   * @param stateCode  the state code for the target state.
+   * @param countyName the name of the county for which to retrieve the code.
+   * @return the county code corresponding to the provided state code and county name.
+   * @throws IOException if an error occurs during the API request.
+   */
   private String getCountyCode(String stateCode, String countyName) throws IOException {
     // api request to get county code based on county name and state code
     if (stateCode != null) {
@@ -193,7 +228,7 @@ public class BroadbandHandler implements Route {
     }
 
     // Return null if county name not found
-    return null;
+    return "null";
   }
 
 }

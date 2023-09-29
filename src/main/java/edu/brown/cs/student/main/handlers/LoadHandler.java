@@ -19,14 +19,35 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+
+/**
+ * The LoadHandler class deals with requests related to loading CSV files. It expects a "filepath" query
+ * parameter specifying the path to the CSV file to be loaded, taking in a specified Dataset.
+ */
 public class LoadHandler implements Route {
   private final Dataset data;
   // create a parser field? feed in the parser here?
 
+  /**
+   * Constructs a new LoadHandler instance with the specified Dataset.
+   *
+   * @param current The dataset to be used for viewing.
+   */
   public LoadHandler(Dataset current) {
     this.data = current;
   }
 
+  /**
+   * Method that handles an HTTP request to load a dataset from a file. The MyParser class is used to parse
+   * the CSV file, and the `CreatorFromRow` interface and custom `Creator` class are used to specify how rows
+   * from the CSV file are transformed into lists of strings. Upon successful loading, it updates the dataset in
+   * the `Dataset` object, and if an error occurs during loading, it generates a JSON response indicating the failure.
+   *
+   * @param request  the HTTP request containing the file path to load.
+   * @param response the HTTP response to be populated with success or failure messages.
+   * @return a success message if the file is loaded successfully; otherwise, a loading failure message in JSON format.
+   * @throws Exception if an error occurs during file loading or response construction.
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // we either do a success response or a fail response
@@ -62,6 +83,10 @@ public class LoadHandler implements Route {
     }
   }
 
+  /**
+   * A record representing a loading failure response.
+   * It can be serialized to JSON format.
+   */
   public record LoadingFailureResponse(String response_type) {
     /**
      * @return this response, serialized as Json

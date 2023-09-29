@@ -8,7 +8,10 @@ import edu.brown.cs.student.main.handlers.LoadHandler;
 import edu.brown.cs.student.main.handlers.SearchHandler;
 import edu.brown.cs.student.main.handlers.ViewHandler;
 import edu.brown.cs.student.main.server.Dataset;
+import java.io.File;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +86,7 @@ class TestingServer {
   @AfterEach
   public void teardown() {
     // Gracefully stop Spark listening on both endpoints
-    Spark.unmap("loadcsv");
+    Spark.unmap("/loadcsv");
     Spark.unmap("/viewcsv");
     Spark.unmap("/searchcsv");
     Spark.unmap("/broadband");
@@ -120,7 +123,7 @@ class TestingServer {
 
   @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type checker
-  public void testLoadCSVSuccess() throws IOException {
+  public void testLoadCSVSuccessWithHeader() throws IOException {
     HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/stars/stardata.csv");
     // Get an OK response (the *connection* worked, the *API* provides an error response)
     assertEquals(200, clientConnection.getResponseCode());
@@ -139,6 +142,29 @@ class TestingServer {
     assertEquals("success", response.result);
     assertEquals("data/stars/stardata.csv", response.loaded);
   }
+
+  @Test
+  // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type checker
+  public void testLoadCSVSuccessNoHeader() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/noHeaderTest.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+//    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+//    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
+    SuccessResponseLoadCSV response = moshi.adapter(SuccessResponseLoadCSV.class).
+        fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+
+//    System.out.println(response.Loaded);
+//    System.out.println(response.result);
+
+    clientConnection.disconnect();
+    assertEquals("success", response.result);
+    assertEquals("data/csvtest/noHeaderTest.csv", response.loaded);
+  }
+
 
   public static class FailResponseLoadCSV {
 
@@ -330,10 +356,113 @@ class TestingServer {
     assertEquals(check, response.view_data.get(0));
   }
 
+  @Test
+  public void searchCSVFoundNoNarrow() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=right&header=true");
+    assertEquals(200, clientConnection2.getResponseCode());
 
+    Moshi moshi = new Moshi.Builder().build();
 
+    SearchFoundResponse response = moshi.adapter(SearchFoundResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
 
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("success", response.result);
+    List<String> check = new ArrayList<>();
+    check.add("alex");
+    check.add("first");
+    check.add("right");
+    assertEquals(check, response.view_data.get(1));
+  }
 
+  public static class SearchNotFoundResponse {
+    public String type;
+    public String error_type;
+    public String search_word;
+    public String specifier;
+  }
 
+  @Test
+  public void searchCSVNotFound() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/stars/ten-star.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=HELLO&header=true");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchNotFoundResponse  response = moshi.adapter(SearchNotFoundResponse .class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("no match found", response.error_type);
+    assertEquals("HELLO", response.search_word);
+  }
+
+  @Test
+  public void searchCSVNotFoundAllArgs() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/stars/ten-star.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=Sol&header=true&narrow=ind:2");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchNotFoundResponse  response = moshi.adapter(SearchNotFoundResponse .class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("no match found", response.error_type);
+    assertEquals("Sol", response.search_word);
+    assertEquals("ind:2", response.specifier);
+  }
+
+  @Test
+  public void searchCSVFoundNoHeader() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/noHeaderTest.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=Barus&header=false");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchFoundResponse response = moshi.adapter(SearchFoundResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("success", response.result);
+    List<String> check = new ArrayList<>();
+    check.add("Carla");
+    check.add("Barus");
+    check.add("32");
+    assertEquals(check, response.view_data.get(0));
+  }
+
+  ////////////////////// MOCKS and UNITS /////////////////////////////////////
+
+  @Test
+  public void testViewNoFileLoadedMock() throws IOException {
+
+    String json = new String(Files.readAllBytes(Paths.get("data/Mocks/mocktest1.json")));
+    Moshi moshi = new Moshi.Builder().build();
+
+    JsonAdapter<ViewNoFileResponse> adapter = moshi.adapter(ViewNoFileResponse.class);
+    ViewNoFileResponse response = adapter.fromJson(json);
+
+    assertEquals("error", response.type);
+    assertEquals("No files are loaded", response.error_type);
+  }
 
 }

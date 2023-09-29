@@ -12,14 +12,33 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * The ViewHandler class is responsible for handling GET requests for viewing the contents of a loaded
+ * CSV. It takes in a Dataset and serializes the data into a JSON response or returns an error response
+ * if no files are loaded.
+ */
 public class ViewHandler implements Route {
 
   private final Dataset data;
 
+  /**
+   * Constructs a new ViewHandler instance with the specified Dataset.
+   *
+   * @param loaded the Dataset to be used for viewing.
+   */
   public ViewHandler(Dataset loaded) {
     this.data = loaded;
   }
 
+  /**
+   * Method that handles an HTTP request to retrieve and view the dataset's contents.
+   * Constructs a success response with the contents or an error response in JSON format.
+   *
+   * @param request  the HTTP request.
+   * @param response the HTTP response to be populated with dataset contents or error messages.
+   * @return an HTTP response containing the dataset's contents or error messages in JSON format.
+   * @throws Exception if an error occurs during dataset retrieval or response construction.
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
 
@@ -38,8 +57,6 @@ public class ViewHandler implements Route {
       }
       responseMap.put("result", "success");
       responseMap.put("viewData", currentData);
-      String json = adapter.toJson(responseMap);
-      System.out.println(json);
       return adapter.toJson(responseMap);
     } catch (Exception e) {
       responseMap.put("type", "error");
