@@ -83,7 +83,7 @@ public class MySearcher {
   private void indexSearch(String toFind) {
     for (int i = this.startIndex; i < this.dataset.size(); i++) {
       List<String> row = this.dataset.get(i);
-      if (row.get(this.narrowIndex).equals(toFind)) {
+      if (row.get(this.narrowIndex).contains(toFind)) {
         this.found.add(row);
       }
     }
@@ -97,10 +97,8 @@ public class MySearcher {
   private void allSearch(String toFind) {
     for (int i = this.startIndex; i < this.dataset.size(); i++) {
       List<String> row = this.dataset.get(i);
-      for (String ele : row) {
-        if (ele.equals(toFind)) {
-          this.found.add(row);
-        }
+      if (row.contains(toFind)) {
+        this.found.add(row);
       }
     }
   }

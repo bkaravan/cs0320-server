@@ -48,53 +48,61 @@ public class BroadbandHandler implements Route {
     String stateCode = getStateCode(stateName);
     String countyCode = getCountyCode(stateCode, countyName);
 
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter2 = moshi.adapter(mapStringObject);
+    Map<String, Object> responseMap = new HashMap<>();
+
     System.out.println(timestamp);
 
     // request data for given state and county
     if (stateCode != null && countyCode != null) {
+      System.out.println(1);
 
       try {
         String apiKey = "api_key";
-        String apiUrl = "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_001E&for=county:" + countyCode
-            + "*&in=state:" + stateCode + "&key=" + apiKey;
+        String apiUrl = "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_001E&for=county:" + countyCode + "&in=state:" + stateCode;
+        System.out.println(apiUrl);
+        System.out.println(2);
 
         URL url = new URL(apiUrl);
 
         HttpURLConnection requestURL = (HttpURLConnection) url.openConnection();
 
         int responseCode = requestURL.getResponseCode();
+        System.out.println(responseCode);
+        System.out.println(3);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
-          Moshi moshi = new Moshi.Builder().build();
-          JsonAdapter<Map<String, List<String>>> adapter = moshi.adapter(Types.newParameterizedType(Map.class, String.class, List.class));
+          JsonAdapter<List<String[]>> adapter = moshi.adapter(Types.newParameterizedType(List.class, String[].class));
+          System.out.println(4);
 
+          try (Buffer newBuffer = new Buffer().readFrom(requestURL.getInputStream())) {
+            System.out.println(11);
+
+            List<String[]> jsonResponse = adapter.fromJson(newBuffer);
+
+            System.out.println(6);
+
+            // get data from json
+            String broadbandData = jsonResponse.get(1)[1];
+            System.out.println(4);
+
+            // response map w timestamp and data
+            responseMap.put("timestamp", timestamp);
+            responseMap.put("data", broadbandData);
+            System.out.println(timestamp + broadbandData);
+            System.out.println(responseMap);
+            System.out.println(5);
+            return adapter2.toJson(responseMap);
+          } catch (Exception e) {
+            System.out.println(e);
+            responseMap.put("error_type", e);
+            return adapter2.toJson(responseMap);
+          }
           // parse json into map
-          Map<String, List<String>> jsonResponse = adapter.fromJson(new Buffer().readFrom(requestURL.getInputStream()));
 
-          // get data from json
-          List<String> broadbandData = jsonResponse.get("S2802_C03_001E");
 
-          // response map w timestamp and data
-          Map<String, Object> responseMap = new HashMap<>();
-          responseMap.put("timestamp", timestamp);
-          responseMap.put("data", broadbandData);
-          System.out.println(timestamp + broadbandData);
-
-//          Moshi moshi = new Moshi.Builder().build();
-//          JsonAdapter<GridResponse> adapter = moshi.adapter(GridResponse.class).nonNull();
-//          // NOTE: important! pattern for handling the input stream
-//          GridResponse body = adapter.fromJson(new Buffer().readFrom(requestURL.getInputStream()));
-//          requestURL.disconnect();
-//          if (body == null || body.properties() == null || body.properties().gridId() == null) {
-//            throw new DatasourceException("Malformed response from Census API");
-//          }
-//
-//          // return the extracted census data
-//          Map<String, Object> responseMap = new HashMap<>();
-//          responseMap.put("timestamp", timestamp);
-//          responseMap.put("data", broadbandData);
-//
-//          return body;
         } else {
           // handle failed API request
           throw new DatasourceException("API request failed with response code: " + responseCode);
@@ -102,9 +110,13 @@ public class BroadbandHandler implements Route {
 
       } catch (IOException e) {
         throw new DatasourceException(e.getMessage());
+      } catch (Exception e) {
+        responseMap.put("error_type", e);
+        return adapter2.toJson(responseMap);
       }
     }
-    return null;
+    responseMap.put("error_type", "Not found county or state");
+    return adapter2.toJson(responseMap);
   }
 
   private String getDateTime() {
@@ -143,7 +155,10 @@ public class BroadbandHandler implements Route {
           }
         }
       }
-    } finally {
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    finally {
       connection.disconnect();
     }
     return null;
@@ -191,7 +206,10 @@ public class BroadbandHandler implements Route {
 
           }
         }
-      } finally {
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+      finally {
         connection.disconnect();
       }
     }
@@ -199,9 +217,5 @@ public class BroadbandHandler implements Route {
     // Return null if county name not found
     return null;
   }
-
-  public record GridResponse(String id, GridResponseProperties properties) { }
-  // Note: case matters! "gridID" will get populated with null, because "gridID" != "gridId"
-  public record GridResponseProperties(String gridId) {}
 
 }
