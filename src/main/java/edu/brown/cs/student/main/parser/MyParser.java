@@ -53,7 +53,7 @@ public class MyParser<T> implements Iterable<T> {
       try {
         this.line = this.buffreader.readLine();
         while (this.line != null) {
-          //this.dataset.add(this.creator.create(Arrays.asList(this.line.split(","))));
+          // this.dataset.add(this.creator.create(Arrays.asList(this.line.split(","))));
           this.dataset.add(this.creator.create(Arrays.asList(regexSplitCSVRow.split(this.line))));
           this.line = this.buffreader.readLine();
           this.index++;

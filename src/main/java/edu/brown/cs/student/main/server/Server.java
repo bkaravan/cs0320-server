@@ -9,10 +9,10 @@ import edu.brown.cs.student.main.handlers.ViewHandler;
 import spark.Spark;
 
 /**
- * The Server class acts as the central component that listens for incoming HTTP requests,
- * routes them to the appropriate handler, and sends back the corresponding responses using
- * the SparkJava framework. Endpoints associated with each handler—`loadcsv`, `viewcsv`, `searchcsv`, and `broadband`—
- * are set up here.
+ * The Server class acts as the central component that listens for incoming HTTP requests, routes
+ * them to the appropriate handler, and sends back the corresponding responses using the SparkJava
+ * framework. Endpoints associated with each handler—`loadcsv`, `viewcsv`, `searchcsv`, and
+ * `broadband`— are set up here.
  */
 public class Server {
 
@@ -23,15 +23,16 @@ public class Server {
    */
   public static void main(String[] args) {
     int port = 3232;
-    //String path = args[0];
+    // String path = args[0];
     Spark.port(port);
 
-    after((request, response) -> {
-      response.header("Access-Control-Allow-Origin", "*");
-      response.header("Access-Control-Allow-Methods", "*");
-    });
+    after(
+        (request, response) -> {
+          response.header("Access-Control-Allow-Origin", "*");
+          response.header("Access-Control-Allow-Methods", "*");
+        });
 
-//    record Dataset(ArrayList<ArrayList<String>> data) {}
+    //    record Dataset(ArrayList<ArrayList<String>> data) {}
     Dataset current = new Dataset();
 
     Spark.get("loadcsv", new LoadHandler(current));
@@ -43,5 +44,4 @@ public class Server {
 
     System.out.println("Server started at http://localhost:" + port);
   }
-
 }

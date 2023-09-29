@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Dataset is a class that serves as a central data structure to store the CSV data that
- * is loaded into the server, using a nested list structure, List<List<String>>, to represent the data.
- * LoadHandler, ViewHandler, and SearchHandler take in Dataset to access the loaded CSV for processing
- * and responding to their respective requests.
+ * Dataset is a class that serves as a central data structure to store the CSV data that is loaded
+ * into the server, using a nested list structure, List<List<String>>, to represent the data.
+ * LoadHandler, ViewHandler, and SearchHandler take in Dataset to access the loaded CSV for
+ * processing and responding to their respective requests.
  */
 public class Dataset {
   private List<List<String>> dataset = new ArrayList<>();
@@ -29,5 +29,4 @@ public class Dataset {
   public List<List<String>> getDataset() {
     return new ArrayList<>(this.dataset);
   }
-
 }

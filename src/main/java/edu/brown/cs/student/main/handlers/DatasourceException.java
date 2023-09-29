@@ -7,6 +7,7 @@ public class DatasourceException extends Exception {
     super(message);
     this.cause = null;
   }
+
   public DatasourceException(String message, Throwable cause) {
     super(message);
     this.cause = cause;
