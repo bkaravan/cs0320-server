@@ -55,7 +55,7 @@ public class LoadHandler implements Route {
       parser.toParse();
       this.data.setDataset(parser.getDataset());
       responseMap.put("result", "success");
-      responseMap.put("Loaded", path);
+      responseMap.put("loaded", path);
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       return new LoadingFailureResponse("error_datasource: " + path).serialize();

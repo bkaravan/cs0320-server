@@ -9,9 +9,13 @@ import edu.brown.cs.student.main.handlers.SearchHandler;
 import edu.brown.cs.student.main.handlers.ViewHandler;
 import edu.brown.cs.student.main.server.Dataset;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import okio.Buffer;
+import org.eclipse.jetty.io.ssl.ALPNProcessor.Client;
+import org.eclipse.jetty.util.IO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,22 +54,8 @@ class TestingServer {
   @BeforeAll
   public static void setup_before_everything() {
 
-    // Set the Spark port number. This can only be done once, and has to
-    // happen before any route maps are added. Hence using @BeforeClass.
-    // Setting port 0 will cause Spark to use an arbitrary available port.
     Spark.port(0);
-    // Don't try to remember it. Spark won't actually give Spark.port() back
-    // until route mapping has started. Just get the port number later. We're using
-    // a random _free_ port to remove the chances that something is already using a
-    // specific port on the system used for testing.
 
-    // Remove the logging spam during tests
-    //   This is surprisingly difficult. (Notes to self omitted to avoid complicating things.)
-
-    // SLF4J doesn't let us change the logging level directly (which makes sense,
-    //   given that different logging frameworks have different level labels etc.)
-    // Changing the JDK *ROOT* logger's level (not global) will block messages
-    //   (assuming using JDK, not Log4J)
     Logger.getLogger("").setLevel(Level.WARNING); // empty name = root logger
   }
 
@@ -94,9 +84,9 @@ class TestingServer {
   public void teardown() {
     // Gracefully stop Spark listening on both endpoints
     Spark.unmap("loadcsv");
-    Spark.unmap("viewcsv");
-    Spark.unmap("searchcsv");
-    Spark.unmap("broadband");
+    Spark.unmap("/viewcsv");
+    Spark.unmap("/searchcsv");
+    Spark.unmap("/broadband");
     Spark.awaitStop(); // don't proceed until the server is stopped
   }
 
@@ -123,9 +113,9 @@ class TestingServer {
 
 
   public static class SuccessResponseLoadCSV {
-
     public String result;
-    public String Loaded;
+    public String loaded;
+
   }
 
   @Test
@@ -142,12 +132,12 @@ class TestingServer {
     SuccessResponseLoadCSV response = moshi.adapter(SuccessResponseLoadCSV.class).
         fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
 
-    System.out.println(response.Loaded);
-    System.out.println(response.result);
+//    System.out.println(response.Loaded);
+//    System.out.println(response.result);
 
     clientConnection.disconnect();
     assertEquals("success", response.result);
-    assertEquals("data/stars/stardata.csv", response.Loaded);
+    assertEquals("data/stars/stardata.csv", response.loaded);
   }
 
   public static class FailResponseLoadCSV {
@@ -202,31 +192,148 @@ class TestingServer {
     assertEquals("filepath", response.missing_argument);
   }
 
-  // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type checker
-//  public void testAPIViewCSVFile() throws IOException {
-//    // HttpURLConnection clientConnection = tryRequest("loadCensus?state=Maine");
-//    HttpURLConnection clientConnection0 = tryRequest("loadCSV?file=data/stars/ten-star.csv");
-//
-//    HttpURLConnection clientConnection = tryRequest("viewCSV");
-//
-//    // Get an OK response (the *connection* worked, the *API* provides an error response)
-//    assertEquals(200, clientConnection.getResponseCode());
-//
-//    // Now we need to see whether we've got the expected Json response.
-//    // SoupAPIUtilities handles ingredient lists, but that's not what we've got here.
-//    Moshi moshi = new Moshi.Builder().build();
-//    // We'll use okio's Buffer class here
-//    ResponseLoadCSV response0 =
-//        moshi.adapter(ResponseLoadCSV.class).fromJson(new Buffer().readFrom(clientConnection0.getInputStream()));
-//    ResponseLoadCSV response =
-//        moshi.adapter(ResponseLoadCSV.class).fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-//
-//    System.out.println(response);
-//    // ^ If that succeeds, we got the expected response. Notice that this is *NOT* an exception, but a real Json reply.
-//
-//    clientConnection.disconnect();
-//    assertEquals("Error: Invalid or empty file name",response);
-//
-//  }
+  public static class ViewSuccessResponse {
+    public String result;
+    public List<List<String>> viewData;
+  }
+
+  @Test
+  public void testViewCSVSuccess() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("viewcsv");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    ViewSuccessResponse response = moshi.adapter(ViewSuccessResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("success", response.result);
+//    System.out.println(response.viewData);
+    List<String> check = new ArrayList<>();
+    check.add("name");
+    check.add("class");
+    check.add("position");
+    assertEquals(check, response.viewData.get(0));
+  }
+
+  public static class ViewNoFileResponse {
+    public String type;
+    public String error_type;
+  }
+
+  @Test
+  public void testViewNoFileLoaded() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("viewcsv");
+    assertEquals(200, clientConnection.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    ViewNoFileResponse response = moshi.adapter(ViewNoFileResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+
+    clientConnection.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("No files are loaded", response.error_type);
+  }
+
+  @Test
+  public void testSearchNoFileLoaded() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("searchcsv");
+    assertEquals(200, clientConnection.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    ViewNoFileResponse response = moshi.adapter(ViewNoFileResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+
+    clientConnection.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("No files are loaded", response.error_type);
+  }
+
+  public static class SearchMissingArgResponse {
+    public String type;
+    public String error_type;
+    public String error_arg;
+  }
+
+  @Test
+  public void testSearchCSVMissingArgSearch() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchMissingArgResponse response = moshi.adapter(SearchMissingArgResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("missing_parameter", response.error_type);
+    assertEquals("search", response.error_arg);
+  }
+
+  @Test
+  public void testSearchCSVMissingArgHeader() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=left");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchMissingArgResponse response = moshi.adapter(SearchMissingArgResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("error", response.type);
+    assertEquals("missing_parameter", response.error_type);
+    assertEquals("header", response.error_arg);
+  }
+
+  public static class SearchFoundResponse {
+    public String result;
+    public List<List<String>> view_data;
+  }
+
+  @Test
+  public void searchCSVFoundAllArgs() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv?filepath=data/csvtest/test.csv");
+    // Get an OK response (the *connection* worked, the *API* provides an error response)
+    assertEquals(200, clientConnection.getResponseCode());
+    HttpURLConnection clientConnection2 = tryRequest("searchcsv?search=right&header=true&ind:2");
+    assertEquals(200, clientConnection2.getResponseCode());
+
+    Moshi moshi = new Moshi.Builder().build();
+
+    SearchFoundResponse response = moshi.adapter(SearchFoundResponse.class).
+        fromJson(new Buffer().readFrom(clientConnection2.getInputStream()));
+
+    clientConnection.disconnect();
+    clientConnection2.disconnect();
+    assertEquals("success", response.result);
+    List<String> check = new ArrayList<>();
+    check.add("jake");
+    check.add("second");
+    check.add("right");
+    assertEquals(check, response.view_data.get(0));
+  }
+
+
+
+
+
+
 
 }

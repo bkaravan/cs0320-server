@@ -37,7 +37,7 @@ public class ViewHandler implements Route {
         return adapter.toJson(responseMap);
       }
       responseMap.put("result", "success");
-      responseMap.put("view data", currentData);
+      responseMap.put("viewData", currentData);
       String json = adapter.toJson(responseMap);
       System.out.println(json);
       return adapter.toJson(responseMap);

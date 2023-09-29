@@ -12,7 +12,7 @@ public class Dataset {
   }
 
   public List<List<String>> getDataset() {
-    return this.dataset;
+    return new ArrayList<>(this.dataset);
   }
 
 }

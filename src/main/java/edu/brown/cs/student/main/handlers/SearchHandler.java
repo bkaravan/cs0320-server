@@ -21,8 +21,6 @@ public class SearchHandler implements Route {
 
   }
 
-  // narrow = "ind: 0" "nam: someName"
-
   @Override
   public Object handle(Request request, Response response) throws Exception {
     //setup moshi
@@ -42,17 +40,17 @@ public class SearchHandler implements Route {
       String search = request.queryParams("search");
       // check search parameter - required
       if (search == null) {
-        responseMap.put("type:", "error");
-        responseMap.put("error_type:", "missing_parameter");
-        responseMap.put("error_arg: ", "search");
+        responseMap.put("type", "error");
+        responseMap.put("error_type", "missing_parameter");
+        responseMap.put("error_arg", "search");
         return adapter.toJson(responseMap);
       }
       String headerS = request.queryParams("header");
       // check header parameter - required
       if (headerS == null) {
-        responseMap.put("type:", "error");
-        responseMap.put("error_type:" , "missing_parameter");
-        responseMap.put("error_arg: ", "header");
+        responseMap.put("type", "error");
+        responseMap.put("error_type" , "missing_parameter");
+        responseMap.put("error_arg", "header");
         return adapter.toJson(responseMap);
       }
       String narrow = request.queryParams("narrow");
@@ -73,7 +71,7 @@ public class SearchHandler implements Route {
       }
 
       responseMap.put("result", "success");
-      responseMap.put("view data", found);
+      responseMap.put("view_data", found);
       return adapter.toJson(responseMap);
     } catch (Exception e) {
       System.out.println(e);
