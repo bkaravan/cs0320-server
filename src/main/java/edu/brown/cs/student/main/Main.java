@@ -12,7 +12,7 @@ import java.io.IOException;
 /** The Main class of our project. This is where execution begins. */
 public final class Main {
 
-  private String[] args;
+  private final String[] args;
 
   /**
    * The initial method called when execution begins.
@@ -55,7 +55,7 @@ public final class Main {
         System.out.println(row);
       }
       //      System.out.println(parser.getDataset());
-      boolean header = args[2].toLowerCase().equals("true");
+      boolean header = args[2].equalsIgnoreCase("true");
       MySearcher searcher = new MySearcher(parser.getDataset(), header, narrow);
       searcher.findRows(args[1]);
       System.out.println(searcher.getFound());

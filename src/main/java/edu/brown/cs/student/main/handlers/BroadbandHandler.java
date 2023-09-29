@@ -22,21 +22,6 @@ import java.util.*;
 
 public class BroadbandHandler implements Route {
 
-//  public class CensusApiResponse {
-//    private List<String> headers;
-//    private List<StateInfo> states;
-//
-//    // Getters and setters for headers and states
-//
-//    public static class StateInfo {
-//      private String name;
-//      private String code;
-//
-//      // Getters and setters for name and code
-//    }
-//  }
-
-
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // get date and time
@@ -53,47 +38,36 @@ public class BroadbandHandler implements Route {
     JsonAdapter<Map<String, Object>> adapter2 = moshi.adapter(mapStringObject);
     Map<String, Object> responseMap = new HashMap<>();
 
-    System.out.println(timestamp);
-
     // request data for given state and county
     if (stateCode != null && countyCode != null) {
-      System.out.println(1);
 
       try {
-        String apiKey = "api_key";
-        String apiUrl = "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_001E&for=county:" + countyCode + "&in=state:" + stateCode;
-        System.out.println(apiUrl);
-        System.out.println(2);
+//        String apiKey = "api_key";
+        String apiUrl = "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_001E&for=county:" +
+            countyCode + "&in=state:" + stateCode;
 
         URL url = new URL(apiUrl);
 
         HttpURLConnection requestURL = (HttpURLConnection) url.openConnection();
 
         int responseCode = requestURL.getResponseCode();
-        System.out.println(responseCode);
-        System.out.println(3);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
           JsonAdapter<List<String[]>> adapter = moshi.adapter(Types.newParameterizedType(List.class, String[].class));
-          System.out.println(4);
 
           try (Buffer newBuffer = new Buffer().readFrom(requestURL.getInputStream())) {
-            System.out.println(11);
 
             List<String[]> jsonResponse = adapter.fromJson(newBuffer);
 
-            System.out.println(6);
-
             // get data from json
             String broadbandData = jsonResponse.get(1)[1];
-            System.out.println(4);
 
             // response map w timestamp and data
+            responseMap.put("result", "success");
+            responseMap.put("state", stateName);
+            responseMap.put("county", countyName);
             responseMap.put("timestamp", timestamp);
-            responseMap.put("data", broadbandData);
-            System.out.println(timestamp + broadbandData);
-            System.out.println(responseMap);
-            System.out.println(5);
+            responseMap.put("broadband access", broadbandData);
             return adapter2.toJson(responseMap);
           } catch (Exception e) {
             System.out.println(e);
@@ -115,6 +89,10 @@ public class BroadbandHandler implements Route {
         return adapter2.toJson(responseMap);
       }
     }
+    if (stateCode == null) {
+      responseMap.put("Could not find state", stateName);
+    }
+    responseMap.put("Could not find county", countyName);
     responseMap.put("error_type", "Not found county or state");
     return adapter2.toJson(responseMap);
   }

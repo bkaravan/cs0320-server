@@ -54,11 +54,11 @@ public class MySearcher {
           this.narrowIndex = Integer.parseInt(this.narrow.substring(4).strip());
           if (this.narrowIndex >= this.dataset.get(0).size()) {
             System.err.println("Please make sure that you provide a valid Index");
-            System.exit(0);
+            throw new IllegalArgumentException("Please provide a valid index");
           }
         } catch (NumberFormatException e) {
           System.err.println("Please make sure to use an integer after Ind: ");
-          System.exit(0);
+          throw new NumberFormatException("Please make sure to use an integer after Ind:");
         }
       }
       case "nam:" -> {
@@ -66,7 +66,7 @@ public class MySearcher {
           this.narrowIndex = this.dataset.get(0).indexOf(this.narrow.substring(4).strip());
         } else {
           System.err.println("Please only search by column name when the header row is present");
-          System.exit(0);
+          throw new IllegalArgumentException("Searching by column name without header row");
         }
       }
       default -> this.narrowIndex = -1;
@@ -124,6 +124,6 @@ public class MySearcher {
    * @return the list of matches with the search word, if any were found
    */
   public ArrayList<List<String>> getFound() {
-    return new ArrayList(this.found);
+    return new ArrayList<>(this.found);
   }
 }
