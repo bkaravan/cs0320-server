@@ -35,9 +35,9 @@ public class Server {
     Dataset current = new Dataset();
 
     Spark.get("loadcsv", new LoadHandler(current));
-    Spark.get("viewcsv", new ViewHandler(current)); //pass in the whole parser?
-    Spark.get("searchcsv", new SearchHandler(current)); //pass in searcher?
-    Spark.get("broadband", new BroadbandHandler()); // something with internet database
+    Spark.get("viewcsv", new ViewHandler(current));
+    Spark.get("searchcsv", new SearchHandler(current));
+    Spark.get("broadband", new BroadbandHandler());
     Spark.init();
     Spark.awaitInitialization();
 
