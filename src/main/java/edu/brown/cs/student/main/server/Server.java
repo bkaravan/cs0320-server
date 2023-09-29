@@ -2,6 +2,10 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import java.util.ArrayList;
+import java.util.List;
+import spark.Spark;
+
 import edu.brown.cs.student.main.handlers.BroadbandHandler;
 import edu.brown.cs.student.main.handlers.LoadHandler;
 import edu.brown.cs.student.main.handlers.SearchHandler;
@@ -24,6 +28,7 @@ public class Server {
   public static void main(String[] args) {
     int port = 3232;
     // String path = args[0];
+    ArrayList<ArrayList<String>> parsedData = new ArrayList<>();
     Spark.port(port);
 
     after(
