@@ -53,6 +53,7 @@ public class MyParser<T> implements Iterable<T> {
       try {
         this.line = this.buffreader.readLine();
         while (this.line != null) {
+          // this.dataset.add(this.creator.create(Arrays.asList(this.line.split(","))));
           this.dataset.add(this.creator.create(Arrays.asList(regexSplitCSVRow.split(this.line))));
           this.line = this.buffreader.readLine();
           this.index++;
@@ -62,7 +63,7 @@ public class MyParser<T> implements Iterable<T> {
       } catch (IOException e) {
         System.out.println("Error " + e);
       } catch (FactoryFailureException e) {
-        System.out.println("Row with index " + this.index + " " + "was not processed. Error: " + e);
+        System.out.println("Row with index " + this.index + " was not processed. Error: " + e);
         this.index++;
         if (this.line == null) {
           keepGoing = false;

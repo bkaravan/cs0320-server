@@ -272,7 +272,7 @@ public class TestingParseSearch {
     this.searcher.findRows("Cael");
     ArrayList<String> compare =
         new ArrayList<>(List.of("11", "Cael", "159.15237", "0.1036", "170.31215"));
-    assertEquals(this.searcher.getFound().size(), 1);
+    assertEquals(this.searcher.getFound().size(), 18);
     assertEquals(this.searcher.getFound().get(0), compare);
   }
 

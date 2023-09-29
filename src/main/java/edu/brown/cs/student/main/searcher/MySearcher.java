@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class MySearcher {
 
-  private ArrayList<List<String>> found;
+  private ArrayList<List<String>> found = new ArrayList<>();
 
-  private final ArrayList<List<String>> dataset;
+  private final List<List<String>> dataset;
   private int narrowIndex;
   private final String narrow;
   private final boolean isHeader;
@@ -27,7 +27,7 @@ public class MySearcher {
    * @param header boolean value to indicate whether the dataset has a header
    * @param key a string that narrows down the search, if provided by user. Defaults to NULL in main
    */
-  public MySearcher(ArrayList<List<String>> dataset, boolean header, String key) {
+  public MySearcher(List<List<String>> dataset, boolean header, String key) {
     this.dataset = dataset;
     this.narrow = key;
     this.isHeader = header;
@@ -54,11 +54,11 @@ public class MySearcher {
           this.narrowIndex = Integer.parseInt(this.narrow.substring(4).strip());
           if (this.narrowIndex >= this.dataset.get(0).size()) {
             System.err.println("Please make sure that you provide a valid Index");
-            System.exit(0);
+            throw new IllegalArgumentException("Please provide a valid index");
           }
         } catch (NumberFormatException e) {
           System.err.println("Please make sure to use an integer after Ind: ");
-          System.exit(0);
+          throw new NumberFormatException("Please make sure to use an integer after Ind:");
         }
       }
       case "nam:" -> {
@@ -66,7 +66,7 @@ public class MySearcher {
           this.narrowIndex = this.dataset.get(0).indexOf(this.narrow.substring(4).strip());
         } else {
           System.err.println("Please only search by column name when the header row is present");
-          System.exit(0);
+          throw new IllegalArgumentException("Searching by column name without header row");
         }
       }
       default -> this.narrowIndex = -1;
@@ -83,7 +83,7 @@ public class MySearcher {
   private void indexSearch(String toFind) {
     for (int i = this.startIndex; i < this.dataset.size(); i++) {
       List<String> row = this.dataset.get(i);
-      if (row.get(this.narrowIndex).equals(toFind)) {
+      if (row.get(this.narrowIndex).contains(toFind)) {
         this.found.add(row);
       }
     }
@@ -97,10 +97,8 @@ public class MySearcher {
   private void allSearch(String toFind) {
     for (int i = this.startIndex; i < this.dataset.size(); i++) {
       List<String> row = this.dataset.get(i);
-      for (String ele : row) {
-        if (ele.equals(toFind)) {
-          this.found.add(row);
-        }
+      if (row.contains(toFind)) {
+        this.found.add(row);
       }
     }
   }
@@ -126,6 +124,6 @@ public class MySearcher {
    * @return the list of matches with the search word, if any were found
    */
   public ArrayList<List<String>> getFound() {
-    return this.found;
+    return new ArrayList<>(this.found);
   }
 }

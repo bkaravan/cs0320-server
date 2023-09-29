@@ -53,23 +53,24 @@ public class MyParser&lt;T&gt; implements Iterable&lt;T&gt; {
       try {
 <span class="fc" id="L54">        this.line = this.buffreader.readLine();</span>
 <span class="fc bfc" id="L55" title="All 2 branches covered.">        while (this.line != null) {</span>
-<span class="fc" id="L56">          this.dataset.add(this.creator.create(Arrays.asList(regexSplitCSVRow.split(this.line))));</span>
-<span class="fc" id="L57">          this.line = this.buffreader.readLine();</span>
-<span class="fc" id="L58">          this.index++;</span>
+          // this.dataset.add(this.creator.create(Arrays.asList(this.line.split(&quot;,&quot;))));
+<span class="fc" id="L57">          this.dataset.add(this.creator.create(Arrays.asList(regexSplitCSVRow.split(this.line))));</span>
+<span class="fc" id="L58">          this.line = this.buffreader.readLine();</span>
+<span class="fc" id="L59">          this.index++;</span>
         }
-<span class="fc" id="L60">        keepGoing = false;</span>
-<span class="fc" id="L61">        this.buffreader.close();</span>
-<span class="nc" id="L62">      } catch (IOException e) {</span>
-<span class="nc" id="L63">        System.out.println(&quot;Error &quot; + e);</span>
-<span class="fc" id="L64">      } catch (FactoryFailureException e) {</span>
-<span class="fc" id="L65">        System.out.println(&quot;Row with index &quot; + this.index + &quot; &quot; + &quot;was not processed. Error: &quot; + e);</span>
-<span class="fc" id="L66">        this.index++;</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (this.line == null) {</span>
-<span class="nc" id="L68">          keepGoing = false;</span>
+<span class="fc" id="L61">        keepGoing = false;</span>
+<span class="fc" id="L62">        this.buffreader.close();</span>
+<span class="nc" id="L63">      } catch (IOException e) {</span>
+<span class="nc" id="L64">        System.out.println(&quot;Error &quot; + e);</span>
+<span class="fc" id="L65">      } catch (FactoryFailureException e) {</span>
+<span class="fc" id="L66">        System.out.println(&quot;Row with index &quot; + this.index + &quot; was not processed. Error: &quot; + e);</span>
+<span class="fc" id="L67">        this.index++;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (this.line == null) {</span>
+<span class="nc" id="L69">          keepGoing = false;</span>
         }
-<span class="pc" id="L70">      }</span>
+<span class="pc" id="L71">      }</span>
     }
-<span class="fc" id="L72">  }</span>
+<span class="fc" id="L73">  }</span>
 
   /**
    * A getter method to pass the parsed information into the searcher.
@@ -77,11 +78,11 @@ public class MyParser&lt;T&gt; implements Iterable&lt;T&gt; {
    * @return the dataset, which is an ArrayList of T objects after parsing the file
    */
   public ArrayList&lt;T&gt; getDataset() {
-<span class="fc" id="L80">    return this.dataset;</span>
+<span class="fc" id="L81">    return new ArrayList&lt;&gt;(this.dataset);</span>
   }
 
   public Iterator&lt;T&gt; iterator() {
-<span class="nc" id="L84">    return new ParseIterator&lt;T&gt;(this.dataset);</span>
+<span class="nc" id="L85">    return new ParseIterator&lt;T&gt;(this.dataset);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

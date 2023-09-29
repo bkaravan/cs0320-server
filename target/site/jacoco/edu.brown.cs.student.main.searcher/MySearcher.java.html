@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class MySearcher {
 
-  private ArrayList&lt;List&lt;String&gt;&gt; found;
+<span class="fc" id="L15">  private ArrayList&lt;List&lt;String&gt;&gt; found = new ArrayList&lt;&gt;();</span>
 
-  private final ArrayList&lt;List&lt;String&gt;&gt; dataset;
+  private final List&lt;List&lt;String&gt;&gt; dataset;
   private int narrowIndex;
   private final String narrow;
   private final boolean isHeader;
@@ -27,7 +27,7 @@ public class MySearcher {
    * @param header boolean value to indicate whether the dataset has a header
    * @param key a string that narrows down the search, if provided by user. Defaults to NULL in main
    */
-<span class="fc" id="L30">  public MySearcher(ArrayList&lt;List&lt;String&gt;&gt; dataset, boolean header, String key) {</span>
+<span class="fc" id="L30">  public MySearcher(List&lt;List&lt;String&gt;&gt; dataset, boolean header, String key) {</span>
 <span class="fc" id="L31">    this.dataset = dataset;</span>
 <span class="fc" id="L32">    this.narrow = key;</span>
 <span class="fc" id="L33">    this.isHeader = header;</span>
@@ -54,21 +54,21 @@ public class MySearcher {
 <span class="fc" id="L54">          this.narrowIndex = Integer.parseInt(this.narrow.substring(4).strip());</span>
 <span class="pc bpc" id="L55" title="1 of 2 branches missed.">          if (this.narrowIndex &gt;= this.dataset.get(0).size()) {</span>
 <span class="nc" id="L56">            System.err.println(&quot;Please make sure that you provide a valid Index&quot;);</span>
-<span class="nc" id="L57">            System.exit(0);</span>
+<span class="nc" id="L57">            throw new IllegalArgumentException(&quot;Please provide a valid index&quot;);</span>
           }
 <span class="nc" id="L59">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L60">          System.err.println(&quot;Please make sure to use an integer after Ind: &quot;);</span>
-<span class="nc" id="L61">          System.exit(0);</span>
+<span class="nc" id="L61">          throw new NumberFormatException(&quot;Please make sure to use an integer after Ind:&quot;);</span>
 <span class="fc" id="L62">        }</span>
-<span class="nc" id="L63">      }</span>
+      }
       case &quot;nam:&quot; -&gt; {
 <span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (this.isHeader) {</span>
 <span class="fc" id="L66">          this.narrowIndex = this.dataset.get(0).indexOf(this.narrow.substring(4).strip());</span>
         } else {
 <span class="nc" id="L68">          System.err.println(&quot;Please only search by column name when the header row is present&quot;);</span>
-<span class="nc" id="L69">          System.exit(0);</span>
+<span class="nc" id="L69">          throw new IllegalArgumentException(&quot;Searching by column name without header row&quot;);</span>
         }
-<span class="nc" id="L71">      }</span>
+      }
 <span class="fc" id="L72">      default -&gt; this.narrowIndex = -1;</span>
     }
 <span class="fc" id="L74">  }</span>
@@ -83,7 +83,7 @@ public class MySearcher {
   private void indexSearch(String toFind) {
 <span class="fc bfc" id="L84" title="All 2 branches covered.">    for (int i = this.startIndex; i &lt; this.dataset.size(); i++) {</span>
 <span class="fc" id="L85">      List&lt;String&gt; row = this.dataset.get(i);</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">      if (row.get(this.narrowIndex).equals(toFind)) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">      if (row.get(this.narrowIndex).contains(toFind)) {</span>
 <span class="fc" id="L87">        this.found.add(row);</span>
       }
     }
@@ -97,13 +97,11 @@ public class MySearcher {
   private void allSearch(String toFind) {
 <span class="fc bfc" id="L98" title="All 2 branches covered.">    for (int i = this.startIndex; i &lt; this.dataset.size(); i++) {</span>
 <span class="fc" id="L99">      List&lt;String&gt; row = this.dataset.get(i);</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">      for (String ele : row) {</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (ele.equals(toFind)) {</span>
-<span class="fc" id="L102">          this.found.add(row);</span>
-        }
-<span class="fc" id="L104">      }</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      if (row.contains(toFind)) {</span>
+<span class="fc" id="L101">        this.found.add(row);</span>
+      }
     }
-<span class="fc" id="L106">  }</span>
+<span class="fc" id="L104">  }</span>
 
   /**
    * public method that is called from the outside of this class, here it decides which search
@@ -112,13 +110,13 @@ public class MySearcher {
    * @param toFind the word we are looking for in the dataset
    */
   public void findRows(String toFind) {
-<span class="fc" id="L115">    this.found = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L116" title="All 2 branches covered.">    if (this.narrowIndex == -1) {</span>
-<span class="fc" id="L117">      this.allSearch(toFind);</span>
+<span class="fc" id="L113">    this.found = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    if (this.narrowIndex == -1) {</span>
+<span class="fc" id="L115">      this.allSearch(toFind);</span>
     } else {
-<span class="fc" id="L119">      this.indexSearch(toFind);</span>
+<span class="fc" id="L117">      this.indexSearch(toFind);</span>
     }
-<span class="fc" id="L121">  }</span>
+<span class="fc" id="L119">  }</span>
 
   /**
    * A getter method for the found field of MySearcher class.
@@ -126,7 +124,7 @@ public class MySearcher {
    * @return the list of matches with the search word, if any were found
    */
   public ArrayList&lt;List&lt;String&gt;&gt; getFound() {
-<span class="fc" id="L129">    return this.found;</span>
+<span class="fc" id="L127">    return new ArrayList&lt;&gt;(this.found);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
